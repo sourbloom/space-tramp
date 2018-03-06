@@ -54,5 +54,9 @@ function or_table(t1, t2)
 end
 
 function keyboard_or_gamepad()
-    return or_table(get_keyboard_state(), get_gamepad_state(1))
+    local input = get_keyboard_state()
+    if #love.joystick.getJoysticks() > 0 then
+        input = or_table(input, get_gamepad_state(1))
+    end
+    return input
 end

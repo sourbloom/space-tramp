@@ -6,9 +6,18 @@ function turtle:start(x, y, angle)
     self.x, self.y, self.angle = x, y, angle
     self.last_x, self.last_y = 0, 0
     self.pen = true
+    self.mirror = false
     self._original_angle = angle
     love.graphics.setColor(aly.colors.white)
     love.graphics.setLineWidth(1)
+end
+
+function turtle:mirror()
+    self.mirror = true
+end
+
+function turtle:unmirror()
+    self.mirror = false
 end
 
 function turtle:_I_moved()
@@ -17,6 +26,12 @@ function turtle:_I_moved()
             self.last_x, self.last_y,
             self.x, self.y
         )
+        -- if self.mirror then
+        --     love.graphics.line(
+        --     -self.last_x, self.last_y,
+        --     -self.x, self.y
+        -- )
+        -- end
     end
 end
 

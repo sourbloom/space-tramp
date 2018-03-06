@@ -24,6 +24,8 @@ function draw_enterprise(thing)
     turtle:pen_color(aly.colors.lightslategray)
     turtle:pen_width(body_thickness)
 
+    turtle:forward(body_length/2)
+
     -- body
     turtle:circle(head_radius)
     turtle:right(math.pi)
@@ -47,18 +49,54 @@ function draw_enterprise(thing)
     turtle:forward(engine_length / 2)
 end
 
+function draw_triangle(thing)
+    turtle:start(thing.x, thing.y, thing.angle)
+    turtle:pen_color(aly.colors.lightslategray)
+    turtle:pen_width(3)
+
+    turtle:pen_up()
+    turtle:forward(30)
+    turtle:pen_down()
+    turtle:right(5*math.pi/6)
+    turtle:forward(60)
+    turtle:back(60)
+    turtle:left(5*math.pi/6)
+    turtle:left(5*math.pi/6)
+    turtle:forward(60)
+    turtle:back(60)
+    turtle:right(5*math.pi/6)
+    turtle:pen_up()
+    turtle:back(40)
+    turtle:right(math.pi/4)
+    turtle:pen_down()
+    turtle:forward(20)
+    turtle:back(20)
+    turtle:left(math.pi/4)
+    turtle:left(math.pi/4)
+    turtle:forward(20)
+end
+
 draw_ship = draw_enterprise
 
 function draw_warp_meter(ship)
-    if ship.warp_charge > 0 and ship.warp_charge < 1.0 then
-        love.graphics.setColor(aly.colors.blueviolet)
-        love.graphics.setLineWidth(5)
+    if ship.warp_charge > 0 then
+        love.graphics.setColor(aly.colors.dodgerblue)
+        love.graphics.setLineWidth(2 + 5 * ship.warp_charge)
         love.graphics.arc(
             'line',
             'open',
             math.floor(ship.x), math.floor(ship.y),
-            20,
-            ship.angle, ship.angle - math.pi * 2 * ship.warp_charge
+            60,
+            ship.angle + math.pi,
+            ship.angle + math.pi + math.pi * ship.warp_charge
+        )
+        love.graphics.arc(
+            'line',
+            'open',
+            math.floor(ship.x), math.floor(ship.y),
+            60,
+            ship.angle + math.pi,
+            ship.angle + math.pi - math.pi * ship.warp_charge
         )
     end
 end

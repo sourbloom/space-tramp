@@ -1,15 +1,18 @@
+-- space tramp!
+
+-- util
 require 'aly'
 require 'turtle'
+require 'functional'
 
+-- game code
 require 'ship'
 require 'ai'
 require 'controls'
 require 'graphics'
 
-WINDOW_WIDTH = 1280
-WINDOW_HEIGHT = 720
-WINDOW_WIDTH = 900
-WINDOW_HEIGHT = 900
+-- WINDOW_WIDTH, WINDOW_HEIGHT = 1280, 720
+WINDOW_WIDTH, WINDOW_HEIGHT = 900, 900
 ACCEL = 10
 DRAG = 0.9
 ROTATION = math.pi * 3 / 2
@@ -49,6 +52,13 @@ function love.update(dt)
         operate_ship(dt, ship)
         move_ship(dt, ship)
     end
+
+    for _, bullet in ipairs(bullets) do
+        update_bullet(dt, bullet)
+    end
+
+    bullets = filter(not_dead, bullets)
+    ships = filter(not_dead, ships)
 end
 
 function love.draw()
@@ -56,8 +66,16 @@ function love.draw()
 
     camera.x = player.x
     camera.y = player.y
+    -- camera.zoom = 0.5 - player.warp_charge * 0.2
     camera.zoom = 0.5
     camera:push()
+
+    for _, bullet in ipairs(bullets) do
+        if not bullet.dead then
+            love.graphics.setColor(aly.colors.red)
+            love.graphics.circle('fill', bullet.x, bullet.y, 10)
+        end
+    end
 
     for _, ship in ipairs(ships) do
         draw_ship(ship)

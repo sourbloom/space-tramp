@@ -8,7 +8,7 @@ Running
 
     This program is written in Lua using Love2D 0.10.2.
 
-    Has been running okay on Ubuntu 16.04 using Love2D's PPA
+    I've been developing under Ubuntu 16.04 using Love2D's PPA
 
         sudo add-apt-repository ppa:bartbes/love-stable
         sudo apt-get update
@@ -20,13 +20,13 @@ Controls
 
     Action          Keyboard            Joypad
 
-    Steer           Left/right arrows   Left/right On dpad or left joystick
-    Forward         Up arrow            A
-    Backwards       Down arrow          A + down on dPad or left joystick
+    Steer           left/right arrows   left/right on dpad or left joystick
+    Forward         up arrow            A
+    Backwards       down arrow          A + down on dpad or left joystick
     Warp            W                   B
 
-    Fire            Left Shift          X
-    Alt Fire        Left Ctrl           Y
+    Fire            left shift          X
+    Alt Fire        left ctrl           Y
 
-    Communication   H                   Right shoulder button/trigger
-    Show Navigation Tab                 Left shoulder button/trigger
+    Communication   H                   right shoulder button/trigger
+    Show Navigation tab                 reft shoulder button/trigger
