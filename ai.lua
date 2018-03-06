@@ -12,20 +12,21 @@ end
 
 function follow_behavior(me, target)
     local input = {}
-    local a = ship_angle_between(me, target)
-
-    if me.angle > ship_angle_between(me, target) then
-        input.left = true
-    else
-        input.right = true
-    end
-
-    if ship_distance(me, target) > 200 and ship_speed(me) < 20 then
-        input.forward = true
-    end
-
     if target.input.warp then
        input.warp = true 
+    else
+        local a = ship_angle_between(me, target)
+        local near = ship_distance(me, target) < 200
+
+        if me.angle > ship_angle_between(me, target) then
+            input.left = true
+        else
+            input.right = true
+        end
+
+        if not near and ship_speed(me) < 20 then
+            input.forward = true
+        end
     end
 
     return input

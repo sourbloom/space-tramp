@@ -43,7 +43,7 @@ end
 function warp_engine_charge_via_input(dt, ship)
     if ship.input.warp then
         if ship.warp_charge < 1.0 then
-            ship.warp_charge = ship.warp_charge + (1/4 * dt)
+            ship.warp_charge = ship.warp_charge + (1/2 * dt)
         else
             ship.warp_charge = 1.0
         end

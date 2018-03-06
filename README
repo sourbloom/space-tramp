@@ -1,0 +1,32 @@
+Space Tramp
+
+    Some kind of space game. Ideally it will have lots of combat in a universe to explore. Think an action oriented FTL with star trek themes mixed in.
+
+    Right now, all you can do is fly and warp around with a buddy ship.
+
+Running
+
+    This program is written in Lua using Love2D 0.10.2.
+
+    Has been running okay on Ubuntu 16.04 using Love2D's PPA
+
+        sudo add-apt-repository ppa:bartbes/love-stable
+        sudo apt-get update
+        sudo apt-get install love
+        cd space-tramp
+        love .
+
+Controls
+
+    Action          Keyboard            Joypad
+
+    Steer           Left/right arrows   Left/right On dpad or left joystick
+    Forward         Up arrow            A
+    Backwards       Down arrow          A + down on dPad or left joystick
+    Warp            W                   B
+
+    Fire            Left Shift          X
+    Alt Fire        Left Ctrl           Y
+
+    Communication   H                   Right shoulder button/trigger
+    Show Navigation Tab                 Left shoulder button/trigger

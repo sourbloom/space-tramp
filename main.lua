@@ -14,7 +14,7 @@ ACCEL = 10
 DRAG = 0.9
 ROTATION = math.pi * 3 / 2
 WARP_ROTATION = math.pi / 10
-WARP_SPEED = 40000
+WARP_SPEED = 20000
 
 ships = {}
 
@@ -31,6 +31,14 @@ stars = make_stars()
 
 function love.load()
     love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
+end
+
+function love.keypressed(key)
+    if key == 'escape' or key == 'q' then
+        love.event.push('quit')
+    -- elseif key == 'f11' then
+    --     love.window.setFullscreen(not love.window.getFullscreen(), 'desktop')
+    end
 end
 
 function love.update(dt)
@@ -68,11 +76,11 @@ function love.draw()
             end
         end
 
-        local player_cur_x = WINDOW_WIDTH / 2 + player.x / 1000
-        local player_cur_y = WINDOW_HEIGHT / 2 + player.y / 1000
+        local player_cur_x = WINDOW_WIDTH / 2 + player.x / 500
+        local player_cur_y = WINDOW_HEIGHT / 2 + player.y / 500
 
-        local buddy_cur_x = WINDOW_WIDTH / 2 + buddy.x / 1000
-        local buddy_cur_y = WINDOW_HEIGHT / 2 + buddy.y / 1000
+        local buddy_cur_x = WINDOW_WIDTH / 2 + buddy.x / 500
+        local buddy_cur_y = WINDOW_HEIGHT / 2 + buddy.y / 500
 
         local x2, y2 = aly.move(player_cur_x, player_cur_y, player.angle, 20 + player.warp_charge * 3000)
         love.graphics.line(player_cur_x, player_cur_y, x2, y2)
@@ -89,13 +97,5 @@ function love.draw()
             buddy_cur_y,
             3
         )
-    end
-end
-
-function love.keypressed(key)
-    if key == 'escape' or key == 'q' then
-        love.event.push('quit')
-    elseif key == 'f11' then
-        love.window.setFullscreen(not love.window.getFullscreen(), 'desktop')
     end
 end
