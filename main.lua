@@ -21,11 +21,14 @@ WARP_SPEED = 20000
 
 ships = {}
 
-player = new_ship(300, 500, draw_ship)
+player = new_ship(300, 500, draw_enterprise)
 table.insert(ships, player)
 
-buddy = new_ship(600, 500, draw_ship)
+buddy = new_ship(600, 500, draw_triangle)
 table.insert(ships, buddy)
+
+buddy2 = new_ship(800, 500, draw_enterprise)
+table.insert(ships, buddy2)
 
 bullets = {}
 
@@ -47,6 +50,7 @@ end
 function love.update(dt)
     player.input = keyboard_or_gamepad()
     buddy.input = follow_behavior(buddy, player)
+    buddy2.input = follow_behavior(buddy2, buddy)
 
     for _, ship in ipairs(ships) do
         operate_ship(dt, ship)
@@ -70,16 +74,14 @@ function love.draw()
     camera.zoom = 0.5
     camera:push()
 
-    for _, bullet in ipairs(bullets) do
-        if not bullet.dead then
-            love.graphics.setColor(aly.colors.red)
-            love.graphics.circle('fill', bullet.x, bullet.y, 10)
-        end
+    for _, ship in ipairs(ships) do
+        ship:draw_func()
+        -- draw_ship(ship)
+        draw_warp_meter(ship)
     end
 
-    for _, ship in ipairs(ships) do
-        draw_ship(ship)
-        draw_warp_meter(ship)
+    for _, bullet in ipairs(bullets) do
+        draw_bullet(bullet)
     end
 
     camera:pop()

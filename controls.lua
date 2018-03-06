@@ -2,10 +2,10 @@
 --     https://love2d.org/wiki/GamepadAxis
 function get_gamepad_state(joynum)
     local jbutton = function(button)
-        return love.joystick.getJoysticks()[1]:isGamepadDown(button)
+        return love.joystick.getJoysticks()[joynum]:isGamepadDown(button)
     end
     local jaxis = function(ax)
-        return love.joystick.getJoysticks()[1]:getGamepadAxis(ax)
+        return love.joystick.getJoysticks()[joynum]:getGamepadAxis(ax)
     end
     local down = jbutton('dpdown') or jaxis('lefty') > 0.5
     return {

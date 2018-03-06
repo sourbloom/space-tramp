@@ -126,3 +126,10 @@ function draw_stars(stars, camera)
         )
     end
 end
+
+function draw_bullet(bullet)
+    if not bullet.dead then
+        love.graphics.setColor(aly.colors.red)
+        love.graphics.circle('fill', bullet.x, bullet.y, 10)
+    end
+end

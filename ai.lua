@@ -13,7 +13,8 @@ end
 function follow_behavior(me, target)
     local input = {}
     if target.input.warp then
-       input.warp = true 
+       input.warp = true
+       me.angle = target.angle
     else
         local a = ship_angle_between(me, target)
         local near = ship_distance(me, target) < 200
