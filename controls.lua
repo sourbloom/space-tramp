@@ -1,6 +1,6 @@
 -- see https://love2d.org/wiki/GamepadButton
 --     https://love2d.org/wiki/GamepadAxis
-function get_gamepad_state(joynum)
+function get_gamepad_state(last_input, joynum)
     local jbutton = function(button)
         return love.joystick.getJoysticks()[joynum]:isGamepadDown(button)
     end
@@ -24,9 +24,9 @@ function get_gamepad_state(joynum)
 end
 
 -- see https://love2d.org/wiki/KeyConstant
-function get_keyboard_state()
+function get_keyboard_state(last_input)
     local kdown = love.keyboard.isDown
-    return {
+    local input = {
         left     = kdown('left'),
         right    = kdown('right'),
         forward  = kdown('up'),
@@ -39,6 +39,7 @@ function get_keyboard_state()
         hail     = kdown('h'),
         nav      = kdown('tab')
     }
+    return input
 end
 
 function or_table(t1, t2)
@@ -54,9 +55,9 @@ function or_table(t1, t2)
 end
 
 function keyboard_or_gamepad()
-    local input = get_keyboard_state()
+    local input = get_keyboard_state(last_input)
     if #love.joystick.getJoysticks() > 0 then
-        input = or_table(input, get_gamepad_state(1))
+        input = or_table(input, get_gamepad_state(last_input, 1))
     end
     return input
 end

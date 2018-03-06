@@ -118,12 +118,15 @@ end
 function draw_stars(stars, camera)
     for i, star in ipairs(stars) do
         love.graphics.setColor(star.color)
-        love.graphics.circle(
-            'fill',
-            (star.x - (camera.x / (-star.r + 5))) % WINDOW_WIDTH,
-            (star.y - (camera.y / (-star.r + 5))) % WINDOW_HEIGHT,
-            star.r
-        )
+        local x = (-50) + (star.x - (camera.x / (-star.r + 5))) % (WINDOW_WIDTH+50)
+        local y = (-50) + (star.y - (camera.y / (-star.r + 5))) % (WINDOW_HEIGHT+50)
+        if player.warp_charge == 1.0 then
+            local x2, y2 = aly.move(x, y, player.angle + math.pi, 50)
+            love.graphics.setLineWidth(star.r)
+            love.graphics.line(x, y, x2, y2)
+        else
+            love.graphics.circle('fill', x, y, star.r)
+        end
     end
 end
 

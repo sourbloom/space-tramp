@@ -17,7 +17,7 @@ ACCEL = 10
 DRAG = 0.9
 ROTATION = math.pi * 3 / 2
 WARP_ROTATION = math.pi / 10
-WARP_SPEED = 20000
+WARP_SPEED = 5000
 
 ships = {}
 
@@ -48,9 +48,9 @@ function love.keypressed(key)
 end
 
 function love.update(dt)
-    player.input = keyboard_or_gamepad()
-    buddy.input = follow_behavior(buddy, player)
-    buddy2.input = follow_behavior(buddy2, buddy)
+    player.input = keyboard_or_gamepad(player.input)
+    buddy.input = follow_behavior(buddy.input, buddy, player)
+    buddy2.input = follow_behavior(buddy2.input, buddy2, buddy)
 
     for _, ship in ipairs(ships) do
         operate_ship(dt, ship)
@@ -96,26 +96,27 @@ function love.draw()
             end
         end
 
-        local player_cur_x = WINDOW_WIDTH / 2 + player.x / 500
-        local player_cur_y = WINDOW_HEIGHT / 2 + player.y / 500
-
-        local buddy_cur_x = WINDOW_WIDTH / 2 + buddy.x / 500
-        local buddy_cur_y = WINDOW_HEIGHT / 2 + buddy.y / 500
-
-        local x2, y2 = aly.move(player_cur_x, player_cur_y, player.angle, 20 + player.warp_charge * 3000)
-        love.graphics.line(player_cur_x, player_cur_y, x2, y2)
-        love.graphics.circle(
-            'fill',
-            player_cur_x,
-            player_cur_y,
-            3
-        )
-        love.graphics.setColor(aly.colors.blue)
-        love.graphics.circle(
-            'fill',
-            buddy_cur_x,
-            buddy_cur_y,
-            3
-        )
+        for k, ship in ipairs(ships) do
+            local x = WINDOW_WIDTH / 2 + ship.x / 100
+            local y = WINDOW_HEIGHT / 2 + ship.y / 100
+            if ship == player then
+                local x2, y2 = aly.move(x, y, player.angle, 20 + player.warp_charge * 3000)
+                love.graphics.line(x, y, x2, y2)
+                love.graphics.circle(
+                    'fill',
+                    x,
+                    y,
+                    3
+                )
+            else
+                love.graphics.setColor(aly.colors.blue)
+                love.graphics.circle(
+                    'fill',
+                    x,
+                    y,
+                    3
+                )
+            end
+        end
     end
 end

@@ -10,7 +10,7 @@ function ship_distance(s1, s2)
     return aly.dist(s1.x, s1.y, s2.x, s2.y)
 end
 
-function follow_behavior(me, target)
+function follow_behavior(last_input, me, target)
     local input = {}
     if target.input.warp then
        input.warp = true
