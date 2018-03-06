@@ -1,4 +1,19 @@
-function draw_ship(thing)
+function draw_spinny(thing)
+    turtle:start(thing.x, thing.y, thing.angle)
+    turtle:pen_color(aly.colors.antiquewhite)
+    turtle:pen_width(3)
+
+    local size = 50
+
+    turtle:forward(size*2)
+    turtle:back(size*2)
+    for i = 0, size do
+        turtle:forward(i)
+        turtle:right(math.pi/6)
+    end
+end
+
+function draw_enterprise(thing)
     local head_radius = 14
     local body_length = 25
     local engine_length = 16
@@ -31,6 +46,8 @@ function draw_ship(thing)
     turtle:back(engine_length)
     turtle:forward(engine_length / 2)
 end
+
+draw_ship = draw_enterprise
 
 function draw_warp_meter(ship)
     if ship.warp_charge > 0 and ship.warp_charge < 1.0 then

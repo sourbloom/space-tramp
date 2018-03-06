@@ -6,8 +6,18 @@ function turtle:start(x, y, angle)
     self.x, self.y, self.angle = x, y, angle
     self.last_x, self.last_y = 0, 0
     self.pen = true
+    self._original_angle = angle
     love.graphics.setColor(aly.colors.white)
     love.graphics.setLineWidth(1)
+end
+
+function turtle:_I_moved()
+    if self.pen then
+        love.graphics.line(
+            self.last_x, self.last_y,
+            self.x, self.y
+        )
+    end
 end
 
 function turtle:forward(amt)
@@ -24,13 +34,20 @@ function turtle:right(amt)
     self.angle = self.angle + amt
 end
 
-function turtle:_I_moved()
-    if self.pen then
-        love.graphics.line(
-            self.last_x, self.last_y,
-            self.x, self.y
-        )
-    end
+function turtle:strife_right(amt)
+    turtle:right(math.pi / 4)
+    turtle:forward(amt)
+    turtle:left(math.pi / 4)
+end
+
+function turtle:strife_left(amt)
+    turtle:left(math.pi / 4)
+    turtle:forward(amt)
+    turtle:right(math.pi / 4)
+end
+
+function turtle:set_angle(a)
+    self.angle = self._original_angle + a
 end
 
 function turtle:back(amt)
