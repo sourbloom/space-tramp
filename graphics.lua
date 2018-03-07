@@ -103,11 +103,11 @@ end
 
 function make_stars()
     local stars = {}
-    for i = 1, 100 do
+    for i = 1, 150 do
         local hue = math.random(100, 255)
         table.insert(stars, {
-            x = math.random(0, WINDOW_WIDTH),
-            y = math.random(0, WINDOW_HEIGHT),
+            x = math.random(0, WINDOW_WIDTH + STAR_WARP_LINE_LENGTH * 2),
+            y = math.random(0, WINDOW_HEIGHT + STAR_WARP_LINE_LENGTH * 2),
             r = 1 + math.random() * 3,
             color = { hue, hue, hue }
         })
@@ -115,13 +115,19 @@ function make_stars()
     return stars
 end
 
+STAR_WARP_LINE_LENGTH = 200
+
 function draw_stars(stars, camera)
     for i, star in ipairs(stars) do
         love.graphics.setColor(star.color)
-        local x = (-50) + (star.x - (camera.x / (-star.r + 5))) % (WINDOW_WIDTH+50)
-        local y = (-50) + (star.y - (camera.y / (-star.r + 5))) % (WINDOW_HEIGHT+50)
-        if player.warp_charge == 1.0 then
-            local x2, y2 = aly.move(x, y, player.angle + math.pi, 50)
+        local x = ((star.x - (camera.x / (-star.r + 5))) % (WINDOW_WIDTH + STAR_WARP_LINE_LENGTH * 2)) - STAR_WARP_LINE_LENGTH
+        local y = ((star.y - (camera.y / (-star.r + 5))) % (WINDOW_HEIGHT + STAR_WARP_LINE_LENGTH * 2)) - STAR_WARP_LINE_LENGTH
+        if player.warp_speed > 0.01 then
+            local x2, y2 = aly.move(
+                x, y,
+                player.angle + math.pi,
+                STAR_WARP_LINE_LENGTH * (player.warp_speed / WARP_SPEED)
+            )
             love.graphics.setLineWidth(star.r)
             love.graphics.line(x, y, x2, y2)
         else

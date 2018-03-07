@@ -5,6 +5,7 @@ function new_ship(x, y, draw_func)
         angle = math.random() * math.pi * 2,
         input = {},
         warp_charge = 0,
+        warp_speed = 0,
         fire_delay = 0,
         stun_delay = 0,
         draw_func = draw_func
@@ -38,8 +39,11 @@ function move_ship_via_input(dt, ship)
         end
     end
 
-    ship.dx = aly.clamp(ship.dx, 100)
-    ship.dy = aly.clamp(ship.dy, 100)
+    -- ship.dx = aly.clamp(ship.dx, 100)
+    -- ship.dy = aly.clamp(ship.dy, 100)
+    if (aly.dist(0, 0, ship.dx, ship.dy) > 100) then
+        ship.dx, ship.dy = aly.move(0, 0, ship.angle, 100 * dt)
+    end
 end
 
 function operate_weapons_via_input(dt, ship)
@@ -63,17 +67,9 @@ end
 
 function warp_engine_charge_via_input(dt, ship)
     if ship.input.warp then
-        if ship.warp_charge < 1.0 then
-            ship.warp_charge = ship.warp_charge + (1/2 * dt)
-        else
-            ship.warp_charge = 1.0
-        end
+        ship.warp_charge = aly.step(ship.warp_charge, 1.0, (1/2 * dt))
     else
-        if ship.warp_charge > 0 then
-            ship.warp_charge = ship.warp_charge - (3 * dt)
-        else
-            ship.warp_charge = 0
-        end
+        ship.warp_charge = aly.step(ship.warp_charge, 0, (3 * dt))
     end
 end
 
@@ -88,14 +84,22 @@ end
 
 function move_ship(dt, ship)
     if ship.warp_charge == 1.0 then
-        ship.x, ship.y = aly.move(ship.x, ship.y, ship.angle, WARP_SPEED * dt)
-        ship.dx, ship.dy = aly.move(0, 0, ship.angle, 5)
+        ship.warp_speed = aly.step(
+            ship.warp_speed,
+            WARP_SPEED,
+            WARP_SPEED * 0.9 * dt
+        )
+        ship.dx, ship.dy = aly.move(0, 0, ship.angle, ship.warp_speed * dt)
     else
-        ship.x = ship.x + ship.dx
-        ship.y = ship.y + ship.dy
+        if ship.warp_speed > 0.1 then
+            ship.dx, ship.dy = aly.move(0, 0, ship.angle, 100 * dt)
+            ship.warp_speed = aly.step(ship.warp_speed, 0, WARP_SPEED*3 * dt)
+        end
         ship.dx = ship.dx - (ship.dx * DRAG * dt)
         ship.dy = ship.dy - (ship.dy * DRAG * dt)
     end
+    ship.x = ship.x + ship.dx
+    ship.y = ship.y + ship.dy
 end
 
 function not_dead(t)

@@ -16,8 +16,8 @@ WINDOW_WIDTH, WINDOW_HEIGHT = 900, 900
 ACCEL = 10
 DRAG = 0.9
 ROTATION = math.pi * 3 / 2
-WARP_ROTATION = math.pi / 10
-WARP_SPEED = 5000
+WARP_ROTATION = math.pi / 14
+WARP_SPEED = 8000
 
 ships = {}
 
@@ -96,27 +96,24 @@ function love.draw()
             end
         end
 
+        local has_player = function() end
         for k, ship in ipairs(ships) do
             local x = WINDOW_WIDTH / 2 + ship.x / 100
             local y = WINDOW_HEIGHT / 2 + ship.y / 100
             if ship == player then
-                local x2, y2 = aly.move(x, y, player.angle, 20 + player.warp_charge * 3000)
-                love.graphics.line(x, y, x2, y2)
-                love.graphics.circle(
-                    'fill',
-                    x,
-                    y,
-                    3
-                )
+                has_player = function()
+                    local x2, y2 = aly.move(x, y, player.angle, 20 + player.warp_charge * 3000)
+                    love.graphics.setColor(aly.colors.darkseagreen)
+                    love.graphics.circle('fill', x, y, 3)
+                    love.graphics.setColor(aly.colors.white)
+                    love.graphics.line(x, y, x2, y2)
+                end
             else
                 love.graphics.setColor(aly.colors.blue)
-                love.graphics.circle(
-                    'fill',
-                    x,
-                    y,
-                    3
-                )
+                love.graphics.circle('fill', x, y, 3)
             end
         end
+
+        has_player()
     end
 end
