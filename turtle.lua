@@ -4,7 +4,7 @@ turtle = {}
 
 function turtle:start(x, y, angle)
     self.x, self.y, self.angle = x, y, angle
-    self.last_x, self.last_y = 0, 0
+    self.last_x, self.last_y = 0, 0    
     self.pen = true
     self.mirror = false
     self._original_angle = angle

@@ -13,18 +13,12 @@ function draw_spinny(thing)
     end
 end
 
-function draw_enterprise(thing)
-    local head_radius = 14
-    local body_length = 25
-    local engine_length = 16
-    local engine_dist = 26
-    local body_thickness = 6
-
+function draw_enterprise(thing, color, head_radius, body_length, engine_length, engine_dist, body_thickness)
     turtle:start(thing.x, thing.y, thing.angle)
-    turtle:pen_color(aly.colors.lightslategray)
+    turtle:pen_color(color)
     turtle:pen_width(body_thickness)
 
-    turtle:forward(body_length/2)
+    turtle:forward(body_length / 2)
 
     -- body
     turtle:circle(head_radius)
@@ -47,6 +41,54 @@ function draw_enterprise(thing)
     turtle:forward(engine_length / 2)
     turtle:back(engine_length)
     turtle:forward(engine_length / 2)
+end
+
+function clamp_color(color)
+    return aly.clamp(color, 0, 255)
+end
+
+function normal_enterprise(thing)
+    local color = aly.colors.lightslategray
+    color[1] = clamp_color(color[1])
+    color[2] = clamp_color(color[2])
+    color[3] = clamp_color(color[3])
+    local head_radius = 14
+    local body_length = 25
+    local engine_length = 16
+    local engine_dist = 26
+    local body_thickness = 6
+    draw_enterprise(
+        thing,
+        color,
+        head_radius,
+        body_length,
+        engine_length,
+        engine_dist,
+        body_thickness
+    )
+end
+
+function gen_draw_random_enterprise()
+    local color = aly.colors.lightslategray
+    color[1] = clamp_color(color[1] + math.random(-50, 50))
+    color[2] = clamp_color(color[2] + math.random(-50, 50))
+    color[3] = clamp_color(color[3] + math.random(-50, 50))
+    local head_radius = 14 + math.random(-3, 3)
+    local body_length = 25 + math.random(-3, 3)
+    local engine_length = 16 + math.random(-3, 3)
+    local engine_dist = 26 + math.random(-5, 5)
+    local body_thickness = 6 + math.random(-2, 2)
+    return function(thing)
+        draw_enterprise(
+            thing,
+            color,
+            head_radius,
+            body_length,
+            engine_length,
+            engine_dist,
+            body_thickness
+        )
+    end
 end
 
 function draw_triangle(thing)
@@ -76,8 +118,6 @@ function draw_triangle(thing)
     turtle:forward(20)
 end
 
-draw_ship = draw_enterprise
-
 function draw_warp_meter(ship)
     if ship.warp_charge > 0 then
         love.graphics.setColor(aly.colors.dodgerblue)
@@ -103,7 +143,7 @@ end
 
 function make_stars()
     local stars = {}
-    for i = 1, 150 do
+    for i = 1, 50 do
         local hue = math.random(100, 255)
         table.insert(stars, {
             x = math.random(0, WINDOW_WIDTH + STAR_WARP_LINE_LENGTH * 2),
@@ -115,7 +155,7 @@ function make_stars()
     return stars
 end
 
-STAR_WARP_LINE_LENGTH = 200
+STAR_WARP_LINE_LENGTH = 150
 
 function draw_stars(stars, camera)
     for i, star in ipairs(stars) do

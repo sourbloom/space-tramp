@@ -17,17 +17,19 @@ ACCEL = 10
 DRAG = 0.9
 ROTATION = math.pi * 3 / 2
 WARP_ROTATION = math.pi / 14
-WARP_SPEED = 8000
+WARP_SPEED = 5000
+
+math.randomseed(os.time())
 
 ships = {}
 
-player = new_ship(300, 500, draw_enterprise)
+player = new_ship(300, 500, normal_enterprise)
 table.insert(ships, player)
 
 buddy = new_ship(600, 500, draw_triangle)
 table.insert(ships, buddy)
 
-buddy2 = new_ship(800, 500, draw_enterprise)
+buddy2 = new_ship(800, 500, gen_draw_random_enterprise())
 table.insert(ships, buddy2)
 
 bullets = {}
@@ -53,8 +55,7 @@ function love.update(dt)
     buddy2.input = follow_behavior(buddy2.input, buddy2, buddy)
 
     for _, ship in ipairs(ships) do
-        operate_ship(dt, ship)
-        move_ship(dt, ship)
+        update_ship(dt, ship)
     end
 
     for _, bullet in ipairs(bullets) do
@@ -76,7 +77,6 @@ function love.draw()
 
     for _, ship in ipairs(ships) do
         ship:draw_func()
-        -- draw_ship(ship)
         draw_warp_meter(ship)
     end
 

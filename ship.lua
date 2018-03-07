@@ -12,7 +12,7 @@ function new_ship(x, y, draw_func)
     }
 end
 
-function move_ship_via_input(dt, ship)
+function ship_process_input_movement(dt, ship)
     if ship.warp_charge == 1.0 then
         if ship.input.left then
             ship.angle = ship.angle - (WARP_ROTATION * dt)
@@ -38,15 +38,9 @@ function move_ship_via_input(dt, ship)
             ship.dy = ship.dy + dy * dt
         end
     end
-
-    -- ship.dx = aly.clamp(ship.dx, 100)
-    -- ship.dy = aly.clamp(ship.dy, 100)
-    if (aly.dist(0, 0, ship.dx, ship.dy) > 100) then
-        ship.dx, ship.dy = aly.move(0, 0, ship.angle, 100 * dt)
-    end
 end
 
-function operate_weapons_via_input(dt, ship)
+function ship_process_input_weapons(dt, ship)
     if ship.fire_delay > 0 then
         ship.fire_delay = ship.fire_delay - 1 * dt
     else
@@ -65,7 +59,8 @@ function operate_weapons_via_input(dt, ship)
     end
 end
 
-function warp_engine_charge_via_input(dt, ship)
+
+function ship_process_input_warp(dt, ship)
     if ship.input.warp then
         ship.warp_charge = aly.step(ship.warp_charge, 1.0, (1/2 * dt))
     else
@@ -73,21 +68,18 @@ function warp_engine_charge_via_input(dt, ship)
     end
 end
 
-function check_ship_hit(bullets, ship)
+function ship_process_input(st, ship)
+    ship_process_input_movement(st, ship)
+    ship_process_input_warp(st, ship)
+    ship_process_input_weapons(st, ship)
 end
 
-function operate_ship(dt, ship)
-    move_ship_via_input(dt, ship)
-    warp_engine_charge_via_input(dt, ship)
-    operate_weapons_via_input(dt, ship)
-end
-
-function move_ship(dt, ship)
+function ship_physics(dt, ship)
     if ship.warp_charge == 1.0 then
         ship.warp_speed = aly.step(
             ship.warp_speed,
             WARP_SPEED,
-            WARP_SPEED * 0.9 * dt
+            WARP_SPEED * 0.8 * dt
         )
         ship.dx, ship.dy = aly.move(0, 0, ship.angle, ship.warp_speed * dt)
     else
@@ -98,8 +90,18 @@ function move_ship(dt, ship)
         ship.dx = ship.dx - (ship.dx * DRAG * dt)
         ship.dy = ship.dy - (ship.dy * DRAG * dt)
     end
+
+    if (aly.dist(0, 0, ship.dx, ship.dy) > 100) then
+        ship.dx, ship.dy = aly.move(0, 0, ship.angle, 100 * dt)
+    end
+
     ship.x = ship.x + ship.dx
     ship.y = ship.y + ship.dy
+end
+
+function update_ship(dt, ship)
+    ship_physics(dt, ship)
+    ship_process_input(dt, ship)
 end
 
 function not_dead(t)
@@ -115,3 +117,4 @@ function update_bullet(dt, bullet)
         bullet.dead = true
     end
 end
+
