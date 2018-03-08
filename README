@@ -17,6 +17,17 @@ Running
         cd space-tramp
         love .
 
+    Also works on android!
+
+        Go to https://love2d.org/ and download the android runtime.
+
+        Run "make build" to generate SpaceTramp.love. Copy this to your phone.
+
+        Open the .love file with a file browser, open with the love app.
+        (File Manager + seems to work well)
+
+    No reason this shouldn't work on iOS too, but I haven't tested that.
+
 Controls
 
     Action          Keyboard            Joypad
@@ -29,3 +40,11 @@ Controls
     Alt Fire        left ctrl           Y
     Communication   H                   right shoulder button/trigger
     Show Navigation tab                 reft shoulder button/trigger
+
+    Touch controls (Imagine the screen is split into big buttons!)
+
+    Steer left      Bottom half of the screen, left side
+    Steer right     Bottom half, right side
+    Forward         Top half, middle
+    Warp            Top half, right
+    Navigation      Top half, left

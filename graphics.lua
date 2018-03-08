@@ -121,7 +121,7 @@ end
 function draw_warp_meter(ship)
     if ship.warp_charge > 0 then
         love.graphics.setColor(aly.colors.dodgerblue)
-        love.graphics.setLineWidth(2 + 5 * ship.warp_charge)
+        love.graphics.setLineWidth(2 + 2 * ship.warp_charge)
         love.graphics.arc(
             'line',
             'open',
@@ -143,7 +143,7 @@ end
 
 function make_stars()
     local stars = {}
-    for i = 1, 50 do
+    for i = 1, 90 do
         local hue = math.random(100, 255)
         table.insert(stars, {
             x = math.random(0, WINDOW_WIDTH + STAR_WARP_LINE_LENGTH * 2),

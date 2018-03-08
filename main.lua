@@ -11,38 +11,44 @@ require 'ai'
 require 'controls'
 require 'graphics'
 
--- WINDOW_WIDTH, WINDOW_HEIGHT = 1280, 720
-WINDOW_WIDTH, WINDOW_HEIGHT = 900, 900
-
-MAX_SPEED = 10
-ACCEL = 10
-DRAG = 0.3
-ROTATION = math.pi * 3 / 2
-WARP_ROTATION = math.pi / 14
-WARP_SPEED = 5000
-
-STAR_WARP_LINE_LENGTH = 150
-
-math.randomseed(os.time())
-
-ships = {}
-
-player = new_ship(300, 500, normal_enterprise)
-table.insert(ships, player)
-
-buddy = new_ship(600, 500, draw_triangle)
-table.insert(ships, buddy)
-
-buddy2 = new_ship(800, 500, gen_draw_random_enterprise())
-table.insert(ships, buddy2)
-
-bullets = {}
-
-camera = aly.Camera()
-stars = make_stars()
 
 function love.load()
+    -- WINDOW_WIDTH, WINDOW_HEIGHT = 1280, 720
+    WINDOW_WIDTH, WINDOW_HEIGHT = 1000, 1000
+    MAX_SPEED = 10
+    ACCEL = 10
+    DRAG = 0.3
+    ROTATION = math.pi * 3 / 2
+    WARP_ROTATION = math.pi / 14
+    WARP_SPEED = 5000
+    STAR_WARP_LINE_LENGTH = 150
+
+    camera = aly.Camera()
+    camera.zoom = 0.5
+
+    if love.system.getOS() == 'Android' or love.system.getOS() == 'iOS' then
+        camera.zoom = 1
+        WINDOW_WIDTH, WINDOW_HEIGHT = love.window.getDesktopDimensions()
+    end
+
     love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
+
+    math.randomseed(os.time())
+
+    ships = {}
+
+    player = new_ship(300, 500, normal_enterprise)
+    table.insert(ships, player)
+
+    buddy = new_ship(600, 500, draw_triangle)
+    table.insert(ships, buddy)
+
+    buddy2 = new_ship(800, 500, gen_draw_random_enterprise())
+    table.insert(ships, buddy2)
+
+    bullets = {}
+
+    stars = make_stars()
 end
 
 function love.keypressed(key)
@@ -76,7 +82,6 @@ function love.draw()
     camera.x = player.x
     camera.y = player.y
     -- camera.zoom = 0.5 - player.warp_charge * 0.2
-    camera.zoom = 0.5
     camera:push()
 
     for _, ship in ipairs(ships) do

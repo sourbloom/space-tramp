@@ -96,9 +96,9 @@ function ship_physics(dt, ship)
         end
         ship.dx = ship.dx - (ship.dx * DRAG * dt)
         ship.dy = ship.dy - (ship.dy * DRAG * dt)
+        ship.dx, ship.dy = limit_vector_distance(ship.dx, ship.dy, MAX_SPEED)
     end
 
-    ship.dx, ship.dy = limit_vector_distance(ship.dx, ship.dy, MAX_SPEED)
 
     ship.x = ship.x + ship.dx
     ship.y = ship.y + ship.dy
