@@ -131,7 +131,7 @@ end
 
 function draw_warp_meter1(ship)
     if ship.warp_charge > 0 then
-        love.graphics.setColor(aly.colors.dodgerblue)
+        love.graphics.setColor(WARP_COLOR)
         love.graphics.setLineWidth(2 + 2 * ship.warp_charge)
         love.graphics.arc(
             'line',

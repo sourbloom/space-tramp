@@ -9,7 +9,10 @@ function new_ship(x, y, behavior, draw_func)
         fire_delay = 0,
         stun_delay = 0,
         behavior = behavior or function() end,
-        draw_func = draw_func
+        draw_func = draw_func,
+        warp_fuel = 1.0,
+        shields = 1.0,
+        weapon_energy = 1.0
     }
 end
 
@@ -45,7 +48,8 @@ function ship_process_input_weapons(dt, ship)
     if ship.fire_delay > 0 then
         ship.fire_delay = ship.fire_delay - 1 * dt
     else
-        if ship.warp_charge == 0.0 and ship.input.fire then
+        if ship.weapon_energy > 0.15 and ship.warp_charge == 0.0 and ship.input.fire then
+            ship.weapon_energy = ship.weapon_energy - 0.15
             ship.fire_delay = 0.5
             local bullet = {
                 x = ship.x,
@@ -60,9 +64,8 @@ function ship_process_input_weapons(dt, ship)
     end
 end
 
-
 function ship_process_input_warp(dt, ship)
-    if ship.input.warp then
+    if ship.input.warp and ship.warp_fuel > 0.0 then
         ship.warp_charge = aly.step(ship.warp_charge, 1.0, (1/2 * dt))
     else
         ship.warp_charge = aly.step(ship.warp_charge, 0, (3 * dt))
@@ -89,6 +92,7 @@ function ship_physics(dt, ship)
             WARP_SPEED,
             WARP_SPEED * 0.8 * dt
         )
+        ship.warp_fuel = aly.step(ship.warp_fuel, 0.0, 1/20*dt)
         ship.dx, ship.dy = aly.move(0, 0, ship.angle, ship.warp_speed * dt)
     else
         if ship.warp_speed > 0.1 then
@@ -99,7 +103,7 @@ function ship_physics(dt, ship)
         ship.dy = ship.dy - (ship.dy * DRAG * dt)
         ship.dx, ship.dy = limit_vector_distance(ship.dx, ship.dy, MAX_SPEED)
     end
-
+    ship.weapon_energy = aly.step(ship.weapon_energy, 1.0, 1/15*dt)
 
     ship.x = ship.x + ship.dx
     ship.y = ship.y + ship.dy

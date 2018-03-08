@@ -10,7 +10,7 @@ require 'ship'
 require 'ai'
 require 'controls'
 require 'graphics'
-
+require 'hud'
 
 function love.load()
     -- WINDOW_WIDTH, WINDOW_HEIGHT = 1280, 720
@@ -22,6 +22,10 @@ function love.load()
     WARP_ROTATION = math.pi / 14
     WARP_SPEED = 5000
     STAR_WARP_LINE_LENGTH = 150
+
+    WARP_COLOR = aly.colors.dodgerblue
+    WEAPON_COLOR = aly.colors.crimson
+    SHIELD_COLOR = aly.colors.blueviolet
 
     camera = aly.Camera()
     camera.zoom = 0.5
@@ -127,4 +131,5 @@ function love.draw()
 
         has_player()
     end
+    draw_meter(player.warp_fuel, player.weapon_energy, player.shields)
 end
