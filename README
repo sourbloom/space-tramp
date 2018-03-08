@@ -1,6 +1,7 @@
 Space Tramp
 
-    Some kind of space game. Ideally it will have lots of combat in a universe to explore. Think an action oriented FTL with star trek themes mixed in.
+    Some kind of space game. Ideally it will have lots of combat in a universe
+    to explore. Think an action oriented FTL with star trek themes mixed in.
 
     Right now, all you can do is fly and warp around with a buddy ship.
 
@@ -24,9 +25,7 @@ Controls
     Forward         up arrow            A
     Backwards       down arrow          A + down on dpad or left joystick
     Warp            W                   B
-
     Fire            left shift          X
     Alt Fire        left ctrl           Y
-
     Communication   H                   right shoulder button/trigger
     Show Navigation tab                 reft shoulder button/trigger
