@@ -297,8 +297,11 @@ function aly.print_table(tab, indent)
     if indent == 1 then aly.raw_print('\n') end
 end
 
-aly.fps_font = love.graphics.newFont(12)
+aly.fps_font = nil
 function aly.draw_fps()
+    if not aly.fps_font then
+        aly.fps_font = love.graphics.newFont(12)
+    end
     love.graphics.setFont(aly.fps_font)
     love.graphics.setColor(0, 0, 0)
     love.graphics.print('FPS: ' .. tostring(love.timer.getFPS()), 4, 4)
@@ -582,3 +585,84 @@ aly.colors = {
     yellow               = {255, 255,   0},
     yellowgreen          = {154, 205,  50}
 }
+
+
+-------------------------------------------------------------------------------
+-- NEW STUFF
+-------------------------------------------------------------------------------
+
+function aly.compose(...)
+    local funcs = {...}
+    return function(a)
+        local result = a
+        for _, func in ipairs(funcs) do
+            result = func(result)
+        end
+        return result
+    end
+end
+
+--[[
+
+ex
+
+function add1(n) return n + 1 end
+r = compose(add1, add1, add1)
+print(r(5))
+8
+
+]]--
+
+function aly.gen_call_all(...)
+    local arg = {...}
+    return function(...)
+        for k, v in ipairs(arg) do
+            v(...)
+        end
+    end
+end
+
+--[[
+
+ex
+
+function a(a, b)
+    print(a, b)
+end
+
+b = aly.gen_call_all(a,a,a)
+b(1, 2)
+
+]]--
+
+function aly.gen_output(func)
+    local value = 0.0
+    return function(amt, input)
+        if amt then
+            if input then
+                value = value + amt
+            else
+                value = value - amt
+            end
+            value = math.min(1.0, math.max(0, value))
+        end
+        return func(value)
+    end
+end
+
+--[[
+
+ex
+
+function identity(n)
+    return n
+end
+
+function loger(n)
+    return n * n
+end
+
+a = gen_output(identity)
+print(a(0.5 * dt, true))
+
+]]--
