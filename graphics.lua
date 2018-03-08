@@ -155,8 +155,6 @@ function make_stars()
     return stars
 end
 
-STAR_WARP_LINE_LENGTH = 150
-
 function draw_stars(stars, camera)
     for i, star in ipairs(stars) do
         love.graphics.setColor(star.color)

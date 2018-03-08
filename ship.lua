@@ -68,10 +68,17 @@ function ship_process_input_warp(dt, ship)
     end
 end
 
-function ship_process_input(st, ship)
-    ship_process_input_movement(st, ship)
-    ship_process_input_warp(st, ship)
-    ship_process_input_weapons(st, ship)
+function ship_process_input(dt, ship)
+    ship_process_input_movement(dt, ship)
+    ship_process_input_warp(dt, ship)
+    ship_process_input_weapons(dt, ship)
+end
+
+function limit_vector_distance(dx, dy, limit)
+    if aly.dist(0, 0, dx, dy) > limit then
+        dx, dy = aly.move(0, 0, aly.angle(0, 0, dx, dy), limit)
+    end
+    return dx, dy
 end
 
 function ship_physics(dt, ship)
@@ -91,9 +98,7 @@ function ship_physics(dt, ship)
         ship.dy = ship.dy - (ship.dy * DRAG * dt)
     end
 
-    if (aly.dist(0, 0, ship.dx, ship.dy) > 100) then
-        ship.dx, ship.dy = aly.move(0, 0, ship.angle, 100 * dt)
-    end
+    ship.dx, ship.dy = limit_vector_distance(ship.dx, ship.dy, MAX_SPEED)
 
     ship.x = ship.x + ship.dx
     ship.y = ship.y + ship.dy

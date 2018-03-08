@@ -13,11 +13,15 @@ require 'graphics'
 
 -- WINDOW_WIDTH, WINDOW_HEIGHT = 1280, 720
 WINDOW_WIDTH, WINDOW_HEIGHT = 900, 900
+
+MAX_SPEED = 10
 ACCEL = 10
-DRAG = 0.9
+DRAG = 0.3
 ROTATION = math.pi * 3 / 2
 WARP_ROTATION = math.pi / 14
 WARP_SPEED = 5000
+
+STAR_WARP_LINE_LENGTH = 150
 
 math.randomseed(os.time())
 
