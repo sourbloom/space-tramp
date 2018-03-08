@@ -10,25 +10,28 @@ function ship_distance(s1, s2)
     return aly.dist(s1.x, s1.y, s2.x, s2.y)
 end
 
-function follow_behavior(last_input, me, target)
-    local input = {}
-    if target.input.warp then
-       input.warp = true
-       me.angle = target.angle
-    else
-        local a = ship_angle_between(me, target)
-        local near = ship_distance(me, target) < 200
+function gen_follow_behavior(target)
+    return function(me)
+        local input = {}
 
-        if me.angle > ship_angle_between(me, target) then
-            input.left = true
+        if target.input.warp then
+           input.warp = true
+           me.angle = target.angle
         else
-            input.right = true
+            local a = ship_angle_between(me, target)
+            local near = ship_distance(me, target) < 200
+
+            if me.angle > ship_angle_between(me, target) then
+                input.left = true
+            else
+                input.right = true
+            end
+
+            if not near and ship_speed(me) < 20 then
+                input.forward = true
+            end
         end
 
-        if not near and ship_speed(me) < 20 then
-            input.forward = true
-        end
+        me.input = input
     end
-
-    return input
 end

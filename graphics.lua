@@ -1,46 +1,46 @@
 function draw_spinny(thing)
-    turtle:start(thing.x, thing.y, thing.angle)
-    turtle:pen_color(aly.colors.antiquewhite)
-    turtle:pen_width(3)
+    local t = new_turtle(thing.x, thing.y, thing.angle)
+    t.pen_color(aly.colors.antiquewhite)
+    t.pen_width(3)
 
     local size = 50
 
-    turtle:forward(size*2)
-    turtle:back(size*2)
+    t.forward(size*2)
+    t.back(size*2)
     for i = 0, size do
-        turtle:forward(i)
-        turtle:right(math.pi/6)
+        t.forward(i)
+        t.right(math.pi/6)
     end
 end
 
 function draw_enterprise(thing, color, head_radius, body_length, engine_length, engine_dist, body_thickness)
-    turtle:start(thing.x, thing.y, thing.angle)
-    turtle:pen_color(color)
-    turtle:pen_width(body_thickness)
+    local t = new_turtle(thing.x, thing.y, thing.angle)
+    t.pen_color(color)
+    t.pen_width(body_thickness)
 
-    turtle:forward(body_length / 2)
+    t.forward(body_length / 2)
 
     -- body
-    turtle:circle(head_radius)
-    turtle:right(math.pi)
-    turtle:forward(body_length)
+    t.circle(head_radius)
+    t.right(math.pi)
+    t.forward(body_length)
 
     -- left engine
-    turtle:right(math.pi / 2)
-    turtle:forward(engine_dist / 2)
-    turtle:right(math.pi / 2)
-    turtle:forward(engine_length / 2)
-    turtle:back(engine_length)
-    turtle:forward(engine_length / 2)
-    turtle:right(math.pi / 2)
+    t.right(math.pi / 2)
+    t.forward(engine_dist / 2)
+    t.right(math.pi / 2)
+    t.forward(engine_length / 2)
+    t.back(engine_length)
+    t.forward(engine_length / 2)
+    t.right(math.pi / 2)
 
-    turtle:forward(engine_dist)
+    t.forward(engine_dist)
 
     -- right engine
-    turtle:left(math.pi / 2)
-    turtle:forward(engine_length / 2)
-    turtle:back(engine_length)
-    turtle:forward(engine_length / 2)
+    t.left(math.pi / 2)
+    t.forward(engine_length / 2)
+    t.back(engine_length)
+    t.forward(engine_length / 2)
 end
 
 function clamp_color(color)
@@ -49,9 +49,6 @@ end
 
 function normal_enterprise(thing)
     local color = aly.colors.lightslategray
-    color[1] = clamp_color(color[1])
-    color[2] = clamp_color(color[2])
-    color[3] = clamp_color(color[3])
     local head_radius = 14
     local body_length = 25
     local engine_length = 16
@@ -73,11 +70,11 @@ function gen_draw_random_enterprise()
     color[1] = clamp_color(color[1] + math.random(-50, 50))
     color[2] = clamp_color(color[2] + math.random(-50, 50))
     color[3] = clamp_color(color[3] + math.random(-50, 50))
-    local head_radius = 14 + math.random(-3, 3)
-    local body_length = 25 + math.random(-3, 3)
-    local engine_length = 16 + math.random(-3, 3)
+    local head_radius = 14 + math.random(0, 8)
+    local body_length = 25 + math.random(-2, 10)
+    local engine_length = 16 + math.random(-5, 5)
     local engine_dist = 26 + math.random(-5, 5)
-    local body_thickness = 6 + math.random(-2, 2)
+    local body_thickness = 6 + math.random(-4, 4)
     return function(thing)
         draw_enterprise(
             thing,
@@ -92,33 +89,47 @@ function gen_draw_random_enterprise()
 end
 
 function draw_triangle(thing)
-    turtle:start(thing.x, thing.y, thing.angle)
-    turtle:pen_color(aly.colors.lightslategray)
-    turtle:pen_width(3)
+    local t = new_turtle(thing.x, thing.y, thing.angle)
+    t.pen_color(aly.colors.red)
+    t.pen_width(3)
 
-    turtle:pen_up()
-    turtle:forward(30)
-    turtle:pen_down()
-    turtle:right(5*math.pi/6)
-    turtle:forward(60)
-    turtle:back(60)
-    turtle:left(5*math.pi/6)
-    turtle:left(5*math.pi/6)
-    turtle:forward(60)
-    turtle:back(60)
-    turtle:right(5*math.pi/6)
-    turtle:pen_up()
-    turtle:back(40)
-    turtle:right(math.pi/4)
-    turtle:pen_down()
-    turtle:forward(20)
-    turtle:back(20)
-    turtle:left(math.pi/4)
-    turtle:left(math.pi/4)
-    turtle:forward(20)
+    t.pen(false)
+    t.forward(30)
+    t.pen(true)
+    t.right(5*math.pi/6)
+    t.forward(60)
+    t.back(60)
+    t.left(5*math.pi/6)
+    t.left(5*math.pi/6)
+    t.forward(60)
+    t.back(60)
+    t.right(5*math.pi/6)
+    t.pen(false)
+    t.back(40)
+    t.right(math.pi/4)
+    t.pen(true)
+    t.forward(20)
+    t.back(20)
+    t.left(math.pi/4)
+    t.left(math.pi/4)
+    t.forward(20)
 end
 
-function draw_warp_meter(ship)
+function draw_test_ship(thing)
+    local t = new_turtle(thing.x, thing.y, thing.angle)
+    t.pen_color(aly.colors.lightslategray)
+    t.pen_width(3)
+
+    t.back(30)
+    t.forward(60)
+    t.mirror(true)
+    for i = 1, 10 do
+        t.right(math.pi/8)
+        t.forward(20)
+    end
+end
+
+function draw_warp_meter1(ship)
     if ship.warp_charge > 0 then
         love.graphics.setColor(aly.colors.dodgerblue)
         love.graphics.setLineWidth(2 + 2 * ship.warp_charge)
@@ -140,6 +151,23 @@ function draw_warp_meter(ship)
         )
     end
 end
+
+function draw_warp_meter2(ship)
+    if ship.warp_charge > 0 and ship.warp_charge < 1.0 then
+        love.graphics.setColor(aly.colors.dodgerblue)
+        love.graphics.setLineWidth(10)
+        love.graphics.arc(
+            'line',
+            'open',
+            math.floor(ship.x), math.floor(ship.y),
+            60,
+            ship.angle,
+            ship.angle + math.pi * 2 * ship.warp_charge
+        )
+    end
+end
+
+draw_warp_meter = draw_warp_meter2
 
 function make_stars()
     local stars = {}

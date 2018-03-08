@@ -37,14 +37,17 @@ function love.load()
 
     ships = {}
 
-    player = new_ship(300, 500, normal_enterprise)
+    player = new_ship(0, 0, player_input, draw_triangle)
     table.insert(ships, player)
 
-    buddy = new_ship(600, 500, draw_triangle)
-    table.insert(ships, buddy)
-
-    buddy2 = new_ship(800, 500, gen_draw_random_enterprise())
-    table.insert(ships, buddy2)
+    for i = 1, 20 do
+        table.insert(ships, new_ship(
+            math.random(-1000, 1000),
+            math.random(-1000, 1000),
+            gen_follow_behavior(player),
+            gen_draw_random_enterprise()
+        ))
+    end
 
     bullets = {}
 
@@ -60,11 +63,10 @@ function love.keypressed(key)
 end
 
 function love.update(dt)
-    player.input = keyboard_or_gamepad(player.input)
-    buddy.input = follow_behavior(buddy.input, buddy, player)
-    buddy2.input = follow_behavior(buddy2.input, buddy2, buddy)
+    -- player.input = keyboard_or_gamepad(player.input)
 
     for _, ship in ipairs(ships) do
+        ship:behavior()
         update_ship(dt, ship)
     end
 

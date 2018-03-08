@@ -1,13 +1,14 @@
-function new_ship(x, y, draw_func)
+function new_ship(x, y, behavior, draw_func)
     return {
         x = x, y = y,
-        dx = 0, dy = 0,
+        dx = math.random(-3, 3), dy = math.random(-3, 3),
         angle = math.random() * math.pi * 2,
         input = {},
         warp_charge = 0,
         warp_speed = 0,
         fire_delay = 0,
         stun_delay = 0,
+        behavior = behavior or function() end,
         draw_func = draw_func
     }
 end

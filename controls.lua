@@ -77,11 +77,14 @@ function or_table(t1, t2)
     return result
 end
 
-function keyboard_or_gamepad()
+function player_input(ship)
     local input = get_keyboard_state()
+
     if #love.joystick.getJoysticks() > 0 then
         input = or_table(input, get_gamepad_state(1))
     end
+
     input = or_table(input, get_touch_state())
-    return input
+
+    ship.input = input
 end
