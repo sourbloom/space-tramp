@@ -1,3 +1,14 @@
+-- 8Bitdo SNES30 GamePad
+local guid = "05000000c82d00004028000000010000"
+love.joystick.setGamepadMapping(guid, 'leftshoulder', 'button', 7)
+love.joystick.setGamepadMapping(guid, 'rightshoulder', 'button', 8)
+love.joystick.setGamepadMapping(guid, 'leftx', 'axis', 1)
+love.joystick.setGamepadMapping(guid, 'lefty', 'axis', 2)
+love.joystick.setGamepadMapping(guid, 'a', 'button', 2)
+love.joystick.setGamepadMapping(guid, 'b', 'button', 1)
+love.joystick.setGamepadMapping(guid, 'x', 'button', 5)
+love.joystick.setGamepadMapping(guid, 'y', 'button', 4)
+
 -- see https://love2d.org/wiki/GamepadButton
 --     https://love2d.org/wiki/GamepadAxis
 function get_gamepad_state(joynum)
@@ -80,8 +91,8 @@ end
 function player_input(ship)
     local input = get_keyboard_state()
 
-    if #love.joystick.getJoysticks() > 0 then
-        input = or_table(input, get_gamepad_state(1))
+    for i = 1, love.joystick.getJoystickCount() do
+        input = or_table(input, get_gamepad_state(i))
     end
 
     input = or_table(input, get_touch_state())
