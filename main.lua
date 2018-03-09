@@ -131,5 +131,6 @@ function love.draw()
 
         has_player()
     end
+
     draw_meter(player.warp_fuel, player.weapon_energy, player.shields)
 end

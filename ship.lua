@@ -110,8 +110,8 @@ function ship_physics(dt, ship)
 end
 
 function update_ship(dt, ship)
-    ship_physics(dt, ship)
     ship_process_input(dt, ship)
+    ship_physics(dt, ship)
 end
 
 function not_dead(t)

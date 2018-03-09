@@ -179,24 +179,24 @@ function aly.percent(per, min, max)
     return per * (max - min) + min
 end
 
-aly.once_states = {}
-function aly.once(index, on)
-    if aly.once_states[index] == nil then
-        aly.once_states[index] = false
-    end
+-- aly.once_states = {}
+-- function aly.once(index, on)
+--     if aly.once_states[index] == nil then
+--         aly.once_states[index] = false
+--     end
 
-    if on then
-        if aly.once_states[index] == false then
-            aly.once_states[index] = true
-            return true
-        elseif aly.once_states[index] == true then
-            return false
-        end
-    else
-        aly.once_states[index] = false
-        return false
-    end
-end
+--     if on then
+--         if aly.once_states[index] == false then
+--             aly.once_states[index] = true
+--             return true
+--         elseif aly.once_states[index] == true then
+--             return false
+--         end
+--     else
+--         aly.once_states[index] = false
+--         return false
+--     end
+-- end
 
 -- collision functions
 
