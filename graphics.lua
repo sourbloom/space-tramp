@@ -25,7 +25,9 @@ function draw_enterprise(thing, color, head_radius, body_length, engine_length, 
     t.right(math.pi)
     t.forward(body_length)
 
-    -- left engine
+    t.mirror(true)
+
+    -- engines
     t.right(math.pi / 2)
     t.forward(engine_dist / 2)
     t.right(math.pi / 2)
@@ -33,14 +35,6 @@ function draw_enterprise(thing, color, head_radius, body_length, engine_length, 
     t.back(engine_length)
     t.forward(engine_length / 2)
     t.right(math.pi / 2)
-
-    t.forward(engine_dist)
-
-    -- right engine
-    t.left(math.pi / 2)
-    t.forward(engine_length / 2)
-    t.back(engine_length)
-    t.forward(engine_length / 2)
 end
 
 function clamp_color(color)
@@ -66,7 +60,7 @@ function normal_enterprise(thing)
 end
 
 function gen_draw_random_enterprise()
-    local color = aly.colors.lightslategray
+    local color = aly.copy(aly.colors.lightslategray)
     color[1] = clamp_color(color[1] + math.random(-50, 50))
     color[2] = clamp_color(color[2] + math.random(-50, 50))
     color[3] = clamp_color(color[3] + math.random(-50, 50))
