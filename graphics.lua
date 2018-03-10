@@ -82,6 +82,28 @@ function gen_draw_random_enterprise()
     end
 end
 
+function draw_fancy(ship)
+    local t = new_turtle(ship.physics.x, ship.physics.y, ship.physics.angle)
+    t.pen_color(aly.colors.green)
+    t.pen_width(3)
+
+    t.pen(false)
+    -- t.back(30)
+    t.push()
+    t.forward(30)
+    t.pen(true)
+    t.mirror(true)
+    t.right(math.pi*5/6)
+    t.forward(30)
+    t.left(math.pi/7)
+    t.forward(20)
+    t.left(math.pi/3)
+    t.forward(10)
+    t.right(math.pi*3/4)
+    t.forward(20)
+    t.pop()
+end
+
 function draw_triangle(ship)
     local t = new_turtle(ship.physics.x, ship.physics.y, ship.physics.angle)
     t.pen_color(aly.colors.red)

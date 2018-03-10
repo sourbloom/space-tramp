@@ -52,12 +52,14 @@ function new_single_turtle(x, y, angle)
     end
 
     turtle.push = function()
-        table.insert(state_stack, {x, y, angle, pen, color})
+        table.insert(state_stack, {x, y, angle, color})
     end
 
     turtle.pop = function()
         assert(#state_stack > 0, 'extra pop on a turtle!!')
-        x, y, angle, pen, color = unpack(table.remove(state_stack, #state_stack))
+        last_x, last_y = x, y
+        x, y, angle, color = unpack(table.remove(state_stack, #state_stack))
+        i_moved()
     end
 
     turtle.circle = function(r)

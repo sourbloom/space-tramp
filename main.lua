@@ -41,7 +41,7 @@ function love.load()
 
     ships = {}
 
-    player = new_ship(0, 0, player_input, ship_update, draw_triangle)
+    player = new_ship(0, 0, player_input, ship_update, draw_fancy)
     table.insert(ships, player)
 
     for i = 1, 20 do
