@@ -2,7 +2,7 @@ function new_ship(x, y, behavior, update, draw)
     return {
         behavior = behavior,
         update = update,
-        draw = draw,
+        draw = gen_ship_draw(draw),
 
         physics = {
             x = x,
@@ -30,6 +30,13 @@ function new_ship(x, y, behavior, update, draw)
         },
         input = {},
     }
+end
+
+function gen_ship_draw(draw_func)
+    return function(ship)
+        draw_func(ship)
+        draw_warp_meter2(ship)
+    end
 end
 
 function ship_process_input_movement(dt, ship)
