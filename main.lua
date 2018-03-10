@@ -46,7 +46,7 @@ function love.load()
 
     for i = 1, 20 do
         table.insert(ships, new_ship(
-            math.random(-1000, 1000),
+            math.random(-1000, 1000),   
             math.random(-1000, 1000),
             gen_follow_behavior(player),
             gen_draw_random_enterprise()
@@ -67,8 +67,6 @@ function love.keypressed(key)
 end
 
 function love.update(dt)
-    -- player.input = keyboard_or_gamepad(player.input)
-
     for _, ship in ipairs(ships) do
         ship:behavior()
         update_ship(dt, ship)
@@ -132,5 +130,5 @@ function love.draw()
         has_player()
     end
 
-    draw_meter(player.warp_fuel, player.weapon_energy, player.shields)
+    draw_meter(player.warp.fuel, player.weapon_energy, player.shields)
 end

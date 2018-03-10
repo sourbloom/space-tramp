@@ -124,16 +124,16 @@ function draw_test_ship(thing)
 end
 
 function draw_warp_meter1(ship)
-    if ship.warp_charge > 0 then
+    if ship.warp.charge > 0 then
         love.graphics.setColor(WARP_COLOR)
-        love.graphics.setLineWidth(2 + 2 * ship.warp_charge)
+        love.graphics.setLineWidth(2 + 2 * ship.warp.charge)
         love.graphics.arc(
             'line',
             'open',
             math.floor(ship.x), math.floor(ship.y),
             60,
             ship.angle + math.pi,
-            ship.angle + math.pi + math.pi * ship.warp_charge
+            ship.angle + math.pi + math.pi * ship.warp.charge
         )
         love.graphics.arc(
             'line',
@@ -141,13 +141,13 @@ function draw_warp_meter1(ship)
             math.floor(ship.x), math.floor(ship.y),
             60,
             ship.angle + math.pi,
-            ship.angle + math.pi - math.pi * ship.warp_charge
+            ship.angle + math.pi - math.pi * ship.warp.charge
         )
     end
 end
 
 function draw_warp_meter2(ship)
-    if ship.warp_charge > 0 and ship.warp_charge < 1.0 then
+    if ship.warp.charge > 0 and ship.warp.charge < 1.0 then
         love.graphics.setColor(aly.colors.dodgerblue)
         love.graphics.setLineWidth(10)
         love.graphics.arc(
@@ -156,7 +156,7 @@ function draw_warp_meter2(ship)
             math.floor(ship.x), math.floor(ship.y),
             60,
             ship.angle,
-            ship.angle + math.pi * 2 * ship.warp_charge
+            ship.angle + math.pi * 2 * ship.warp.charge
         )
     end
 end
@@ -182,11 +182,11 @@ function draw_stars(stars, camera)
         love.graphics.setColor(star.color)
         local x = ((star.x - (camera.x / (-star.r + 5))) % (WINDOW_WIDTH + STAR_WARP_LINE_LENGTH * 2)) - STAR_WARP_LINE_LENGTH
         local y = ((star.y - (camera.y / (-star.r + 5))) % (WINDOW_HEIGHT + STAR_WARP_LINE_LENGTH * 2)) - STAR_WARP_LINE_LENGTH
-        if player.warp_speed > 0.01 then
+        if player.warp.speed > 0.01 then
             local x2, y2 = aly.move(
                 x, y,
                 player.angle + math.pi,
-                STAR_WARP_LINE_LENGTH * (player.warp_speed / WARP_SPEED)
+                STAR_WARP_LINE_LENGTH * (player.warp.speed / WARP_SPEED)
             )
             love.graphics.setLineWidth(star.r)
             love.graphics.line(x, y, x2, y2)
