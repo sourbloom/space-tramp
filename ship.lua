@@ -10,6 +10,11 @@ function new_ship(x, y, behavior, update, draw)
             angle = math.random() * math.pi * 2,
             dx = math.random(-3, 3),
             dy = math.random(-3, 3),
+            size = 26,
+            collision = {
+                'solid',
+                'ship'
+            }
         },
         warp = {
             charge = 0,
@@ -23,10 +28,10 @@ function new_ship(x, y, behavior, update, draw)
         shields = {
             charge = 1.0
         },
-
         input = {},
     }
 end
+
 
 function ship_process_input_movement(dt, ship)
     if ship.warp.charge == 1.0 then

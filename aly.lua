@@ -666,3 +666,15 @@ a = gen_output(identity)
 print(a(0.5 * dt, true))
 
 ]]--
+
+function aly.all_pairs(objects)
+    local result = {}
+    for i, object1 in ipairs(objects) do
+        for j, object2 in ipairs(objects) do
+            if i < j and object1 ~= object2 then
+                table.insert(result, {object1, object2})
+            end
+        end
+    end
+    return result
+end

@@ -6,9 +6,10 @@ require 'turtle'
 require 'functional'
 
 -- game code
+require 'controls'
 require 'ship'
 require 'ai'
-require 'controls'
+require 'collision'
 require 'graphics'
 require 'hud'
 
@@ -78,6 +79,8 @@ function love.update(dt)
 
     bullets = filter(not_dead, bullets)
     ships = filter(not_dead, ships)
+
+    check_for_collisions(ships)
 end
 
 function love.draw()
