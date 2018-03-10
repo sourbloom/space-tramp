@@ -26,8 +26,8 @@ function get_gamepad_state(joynum)
         reverse   = jbutton('a') and down,
 
         fire      = jbutton('x'),
-        alt_fire  = jbutton('y'),
-        warp      = jbutton('b'),
+        alt_fire  = jbutton('b'),
+        warp      = jbutton('y'),
 
         hail      = jbutton('rightshoulder') or jaxis('triggerright') > 0.5,
         nav       = jbutton('leftshoulder') or jaxis('triggerleft') > 0.5
@@ -43,8 +43,8 @@ function get_keyboard_state()
         forward  = kdown('up'),
         reverse  = kdown('down'),
 
-        fire     = kdown('lshift'),
-        alt_fire = kdown('lctrl'),
+        fire     = kdown('lshift') or kdown('rshift'),
+        alt_fire = kdown('lctrl') or kdown('rctrl'),
         warp     = kdown('w'),
 
         hail     = kdown('h'),
@@ -97,5 +97,5 @@ function player_input(ship)
 
     input = or_table(input, get_touch_state())
 
-    ship.input = input
+    return input
 end

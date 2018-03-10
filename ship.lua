@@ -1,66 +1,76 @@
-function new_ship(x, y, behavior, draw_func)
+function new_ship(x, y, behavior, update, draw)
     return {
-        x = x, y = y,
-        dx = math.random(-3, 3), dy = math.random(-3, 3),
-        angle = math.random() * math.pi * 2,
-        input = {},
+        behavior = behavior,
+        update = update,
+        draw = draw,
+
+        physics = {
+            x = x,
+            y = y,
+            angle = math.random() * math.pi * 2,
+            dx = math.random(-3, 3),
+            dy = math.random(-3, 3),
+        },
         warp = {
             charge = 0,
             speed = 0,
             fuel = 0.91,
         },
-        fire_delay = 0,
-        stun_delay = 0,
-        behavior = behavior or function() end,
-        shields = 1.0,
-        weapon_energy = 1.0,
-        draw_func = draw_func,
+        weapon = {
+            delay = 0.0,
+            energy = 1.0
+        },
+        shields = {
+            charge = 1.0
+        },
+
+        input = {},
     }
 end
 
 function ship_process_input_movement(dt, ship)
     if ship.warp.charge == 1.0 then
         if ship.input.left then
-            ship.angle = ship.angle - (WARP_ROTATION * dt)
+            ship.physics.angle = ship.physics.angle - (WARP_ROTATION * dt)
         elseif ship.input.right then
-            ship.angle = ship.angle + (WARP_ROTATION * dt)
+            ship.physics.angle = ship.physics.angle + (WARP_ROTATION * dt)
         end
     elseif ship.warp.charge == 0 then
         if ship.input.left then
-            ship.angle = ship.angle - (ROTATION * dt)
+            ship.physics.angle = ship.physics.angle - (ROTATION * dt)
         elseif ship.input.right then
-            ship.angle = ship.angle + (ROTATION * dt)
+            ship.physics.angle = ship.physics.angle + (ROTATION * dt)
         end
     end
 
     if ship.warp.charge == 0 then
         if ship.input.forward then
-            local dx, dy = aly.move(0, 0, ship.angle, ACCEL)
-            ship.dx = ship.dx + dx * dt
-            ship.dy = ship.dy + dy * dt
+            local dx, dy = aly.move(0, 0, ship.physics.angle, ACCEL)
+            ship.physics.dx = ship.physics.dx + dx * dt
+            ship.physics.dy = ship.physics.dy + dy * dt
         elseif ship.input.reverse then
-            local dx, dy = aly.move(0, 0, ship.angle + math.pi, ACCEL)
-            ship.dx = ship.dx + dx * dt
-            ship.dy = ship.dy + dy * dt
+            local dx, dy = aly.move(0, 0, ship.physics.angle + math.pi, ACCEL)
+            ship.physics.dx = ship.physics.dx + dx * dt
+            ship.physics.dy = ship.physics.dy + dy * dt
         end
     end
 end
 
-function ship_process_input_weapons(dt, ship)
-    if ship.fire_delay > 0 then
-        ship.fire_delay = ship.fire_delay - 1 * dt
+function ship_process_input_weapon(dt, ship)
+    if ship.weapon.delay > 0 then
+        ship.weapon.delay = ship.weapon.delay - 1 * dt
     else
-        if ship.weapon_energy > 0.15 and ship.warp.charge == 0.0 and ship.input.fire then
-            ship.weapon_energy = ship.weapon_energy - 0.15
-            ship.fire_delay = 0.5
+        if ship.weapon.energy > 0.15 and ship.warp.charge == 0.0 and ship.input.fire then
+            ship.weapon.energy = ship.weapon.energy - 0.15
+            ship.weapon.delay = 0.5
             local bullet = {
-                x = ship.x,
-                y = ship.y,
+                x = ship.physics.x,
+                y = ship.physics.y,
                 owner = ship,
                 life = 1,
                 dead = false
             }
-            bullet.dx, bullet.dy = aly.move(ship.dx, ship.dy, ship.angle, 15)
+            bullet.dx, bullet.dy = aly.move(ship.physics.dx, ship.physics.dy, ship.physics.angle, 15)
             table.insert(bullets, bullet)
         end
     end
@@ -77,7 +87,7 @@ end
 function ship_process_input(dt, ship)
     ship_process_input_movement(dt, ship)
     ship_process_input_warp(dt, ship)
-    ship_process_input_weapons(dt, ship)
+    ship_process_input_weapon(dt, ship)
 end
 
 function limit_vector_distance(dx, dy, limit)
@@ -95,23 +105,24 @@ function ship_physics(dt, ship)
             WARP_SPEED * 0.8 * dt
         )
         ship.warp.fuel = aly.step(ship.warp.fuel, 0.0, 1/20*dt)
-        ship.dx, ship.dy = aly.move(0, 0, ship.angle, ship.warp.speed * dt)
+        ship.physics.dx, ship.physics.dy = aly.move(0, 0, ship.physics.angle, ship.warp.speed * dt)
     else
         if ship.warp.speed > 0.1 then
-            ship.dx, ship.dy = aly.move(0, 0, ship.angle, 100 * dt)
+            ship.physics.dx, ship.physics.dy = aly.move(0, 0, ship.physics.angle, 100 * dt)
             ship.warp.speed = aly.step(ship.warp.speed, 0, WARP_SPEED * 6 * dt)
         end
-        ship.dx = ship.dx - (ship.dx * DRAG * dt)
-        ship.dy = ship.dy - (ship.dy * DRAG * dt)
-        ship.dx, ship.dy = limit_vector_distance(ship.dx, ship.dy, MAX_SPEED)
+        ship.physics.dx = ship.physics.dx - (ship.physics.dx * DRAG * dt)
+        ship.physics.dy = ship.physics.dy - (ship.physics.dy * DRAG * dt)
+        ship.physics.dx, ship.physics.dy = limit_vector_distance(ship.physics.dx, ship.physics.dy, MAX_SPEED)
     end
-    ship.weapon_energy = aly.step(ship.weapon_energy, 1.0, 1/15*dt)
+    ship.weapon.energy = aly.step(ship.weapon.energy, 1.0, 1/15*dt)
 
-    ship.x = ship.x + ship.dx
-    ship.y = ship.y + ship.dy
+    ship.physics.x = ship.physics.x + ship.physics.dx
+    ship.physics.y = ship.physics.y + ship.physics.dy
 end
 
 function update_ship(dt, ship)
+    ship.input = ship:behavior()
     ship_process_input(dt, ship)
     ship_physics(dt, ship)
 end

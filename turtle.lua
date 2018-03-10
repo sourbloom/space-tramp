@@ -1,7 +1,7 @@
 require 'aly'
 
 function new_single_turtle(x, y, angle)
-    assert(x and y and angle, 'turtle needs more food!!')
+    assert(x and y and angle, 'turtle not getting fed!!')
 
     local x, y, angle = x, y, angle
     local last_x, last_y = nil, nil

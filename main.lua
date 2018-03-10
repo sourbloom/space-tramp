@@ -14,7 +14,7 @@ require 'hud'
 
 function love.load()
     -- WINDOW_WIDTH, WINDOW_HEIGHT = 1280, 720
-    WINDOW_WIDTH, WINDOW_HEIGHT = 1000, 1000
+    WINDOW_WIDTH, WINDOW_HEIGHT = 1000, 600
     MAX_SPEED = 10
     ACCEL = 10
     DRAG = 0.3
@@ -41,14 +41,15 @@ function love.load()
 
     ships = {}
 
-    player = new_ship(0, 0, player_input, draw_triangle)
+    player = new_ship(0, 0, player_input, ship_update, draw_triangle)
     table.insert(ships, player)
 
     for i = 1, 20 do
         table.insert(ships, new_ship(
-            math.random(-1000, 1000),   
+            math.random(-1000, 1000),
             math.random(-1000, 1000),
             gen_follow_behavior(player),
+            ship_update,
             gen_draw_random_enterprise()
         ))
     end
@@ -68,7 +69,6 @@ end
 
 function love.update(dt)
     for _, ship in ipairs(ships) do
-        ship:behavior()
         update_ship(dt, ship)
     end
 
@@ -83,13 +83,13 @@ end
 function love.draw()
     draw_stars(stars, camera)
 
-    camera.x = player.x
-    camera.y = player.y
-    -- camera.zoom = 0.5 - player.warp_charge * 0.2
+    camera.x = player.physics.x
+    camera.y = player.physics.y
+    -- camera.zoom = 0.5 - player.warp.charge * 0.2
     camera:push()
 
     for _, ship in ipairs(ships) do
-        ship:draw_func()
+        ship:draw()
         draw_warp_meter(ship)
     end
 
@@ -111,11 +111,11 @@ function love.draw()
 
         local has_player = function() end
         for k, ship in ipairs(ships) do
-            local x = WINDOW_WIDTH / 2 + ship.x / 100
-            local y = WINDOW_HEIGHT / 2 + ship.y / 100
+            local x = WINDOW_WIDTH / 2 + ship.physics.x / 100
+            local y = WINDOW_HEIGHT / 2 + ship.physics.y / 100
             if ship == player then
                 has_player = function()
-                    local x2, y2 = aly.move(x, y, player.angle, 20 + player.warp_charge * 3000)
+                    local x2, y2 = aly.move(x, y, player.physics.angle, 20 + player.warp.charge * 3000)
                     love.graphics.setColor(aly.colors.darkseagreen)
                     love.graphics.circle('fill', x, y, 3)
                     love.graphics.setColor(aly.colors.white)
@@ -130,5 +130,5 @@ function love.draw()
         has_player()
     end
 
-    draw_meter(player.warp.fuel, player.weapon_energy, player.shields)
+    draw_meter(player.warp.fuel, player.weapon.energy, player.shields.charge)
 end

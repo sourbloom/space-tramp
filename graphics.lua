@@ -1,5 +1,5 @@
-function draw_spinny(thing)
-    local t = new_turtle(thing.x, thing.y, thing.angle)
+function draw_spinny(ship)
+    local t = new_turtle(ship.physics.x, ship.physics.y, ship.physics.angle)
     t.pen_color(aly.colors.antiquewhite)
     t.pen_width(3)
 
@@ -13,8 +13,8 @@ function draw_spinny(thing)
     end
 end
 
-function draw_enterprise(thing, color, head_radius, body_length, engine_length, engine_dist, body_thickness)
-    local t = new_turtle(thing.x, thing.y, thing.angle)
+function draw_enterprise(ship, color, head_radius, body_length, engine_length, engine_dist, body_thickness)
+    local t = new_turtle(ship.physics.x, ship.physics.y, ship.physics.angle)
     t.pen_color(color)
     t.pen_width(body_thickness)
 
@@ -41,7 +41,7 @@ function clamp_color(color)
     return aly.clamp(color, 0, 255)
 end
 
-function normal_enterprise(thing)
+function normal_enterprise(ship)
     local color = aly.colors.lightslategray
     local head_radius = 14
     local body_length = 25
@@ -49,7 +49,7 @@ function normal_enterprise(thing)
     local engine_dist = 26
     local body_thickness = 6
     draw_enterprise(
-        thing,
+        ship,
         color,
         head_radius,
         body_length,
@@ -69,9 +69,9 @@ function gen_draw_random_enterprise()
     local engine_length = 16 + math.random(-5, 5)
     local engine_dist = 26 + math.random(-5, 5)
     local body_thickness = 6 + math.random(-4, 4)
-    return function(thing)
+    return function(ship)
         draw_enterprise(
-            thing,
+            ship,
             color,
             head_radius,
             body_length,
@@ -82,8 +82,8 @@ function gen_draw_random_enterprise()
     end
 end
 
-function draw_triangle(thing)
-    local t = new_turtle(thing.x, thing.y, thing.angle)
+function draw_triangle(ship)
+    local t = new_turtle(ship.physics.x, ship.physics.y, ship.physics.angle)
     t.pen_color(aly.colors.red)
     t.pen_width(3)
 
@@ -109,8 +109,8 @@ function draw_triangle(thing)
     t.forward(20)
 end
 
-function draw_test_ship(thing)
-    local t = new_turtle(thing.x, thing.y, thing.angle)
+function draw_test_ship(ship)
+    local t = new_turtle(ship.physics.x, ship.physics.y, ship.physics.angle)
     t.pen_color(aly.colors.lightslategray)
     t.pen_width(3)
 
@@ -130,18 +130,18 @@ function draw_warp_meter1(ship)
         love.graphics.arc(
             'line',
             'open',
-            math.floor(ship.x), math.floor(ship.y),
+            math.floor(ship.physics.x), math.floor(ship.physics.y),
             60,
-            ship.angle + math.pi,
-            ship.angle + math.pi + math.pi * ship.warp.charge
+            ship.physics.angle + math.pi,
+            ship.physics.angle + math.pi + math.pi * ship.warp.charge
         )
         love.graphics.arc(
             'line',
             'open',
-            math.floor(ship.x), math.floor(ship.y),
+            math.floor(ship.physics.x), math.floor(ship.physics.y),
             60,
-            ship.angle + math.pi,
-            ship.angle + math.pi - math.pi * ship.warp.charge
+            ship.physics.angle + math.pi,
+            ship.physics.angle + math.pi - math.pi * ship.warp.charge
         )
     end
 end
@@ -153,10 +153,10 @@ function draw_warp_meter2(ship)
         love.graphics.arc(
             'line',
             'open',
-            math.floor(ship.x), math.floor(ship.y),
+            math.floor(ship.physics.x), math.floor(ship.physics.y),
             60,
-            ship.angle,
-            ship.angle + math.pi * 2 * ship.warp.charge
+            ship.physics.angle,
+            ship.physics.angle + math.pi * 2 * ship.warp.charge
         )
     end
 end
@@ -185,7 +185,7 @@ function draw_stars(stars, camera)
         if player.warp.speed > 0.01 then
             local x2, y2 = aly.move(
                 x, y,
-                player.angle + math.pi,
+                player.physics.angle + math.pi,
                 STAR_WARP_LINE_LENGTH * (player.warp.speed / WARP_SPEED)
             )
             love.graphics.setLineWidth(star.r)
