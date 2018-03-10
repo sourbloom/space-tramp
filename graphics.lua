@@ -221,6 +221,6 @@ end
 function draw_bullet(bullet)
     if not bullet.dead then
         love.graphics.setColor(aly.colors.red)
-        love.graphics.circle('fill', bullet.x, bullet.y, 10)
+        love.graphics.circle('fill', bullet.physics.x, bullet.physics.y, 10)
     end
 end

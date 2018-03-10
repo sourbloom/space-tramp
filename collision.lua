@@ -62,3 +62,12 @@ add_rule({'ship'}, {'ship'}, function(ship1, ship2)
     ship1.physics.dx, ship1.physics.dy = aly.move(0, 0, angle + math.pi, avg_speed)
     ship2.physics.dx, ship2.physics.dy = aly.move(0, 0, angle, avg_speed)
 end)
+
+add_rule({'ship'}, {'bullet'}, function(ship, bullet)
+    local angle = aly.angle(
+        ship.physics.x, ship.physics.y,
+        bullet.physics.x, bullet.physics.y
+    )
+    ship.physics.dx, ship.physics.dy = aly.move(0, 0, angle+math.pi, 15)
+    bullet.dead = true
+end)

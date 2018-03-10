@@ -32,6 +32,8 @@ function new_ship(x, y, behavior, update, draw)
     }
 end
 
+rules = nil
+
 
 function ship_process_input_movement(dt, ship)
     if ship.warp.charge == 1.0 then
@@ -69,13 +71,22 @@ function ship_process_input_weapon(dt, ship)
             ship.weapon.energy = ship.weapon.energy - 0.15
             ship.weapon.delay = 0.5
             local bullet = {
-                x = ship.physics.x,
-                y = ship.physics.y,
+                physics = {
+                    x = ship.physics.x,
+                    y = ship.physics.y,
+                    size = 5,
+                    collision = {'bullet'}
+                },
                 owner = ship,
                 life = 1,
                 dead = false
             }
-            bullet.dx, bullet.dy = aly.move(ship.physics.dx, ship.physics.dy, ship.physics.angle, 15)
+            bullet.physics.dx, bullet.physics.dy = aly.move(
+                ship.physics.dx,
+                ship.physics.dy,
+                ship.physics.angle,
+                15
+            )
             table.insert(bullets, bullet)
         end
     end
@@ -139,8 +150,8 @@ end
 function update_bullet(dt, bullet)
     if bullet.life > 0 then
         bullet.life = bullet.life - 1 * dt
-        bullet.x = bullet.x + bullet.dx
-        bullet.y = bullet.y + bullet.dy
+        bullet.physics.x = bullet.physics.x + bullet.physics.dx
+        bullet.physics.y = bullet.physics.y + bullet.physics.dy
     else
         bullet.dead = true
     end
