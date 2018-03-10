@@ -40,22 +40,20 @@ function love.load()
 
     math.randomseed(os.time())
 
-    ships = {}
+    objects = {}
 
-    player = new_ship(0, 0, player_input, ship_update, draw_fancy)
-    table.insert(ships, player)
+    player = new_ship(0, 0, player_input, update_ship, draw_fancy)
+    table.insert(objects, player)
 
     for i = 1, 2 do
-        table.insert(ships, new_ship(
+        table.insert(objects, new_ship(
             math.random(-1000, 1000),
             math.random(-1000, 1000),
             gen_follow_behavior(player),
-            ship_update,
+            update_ship,
             gen_draw_random_enterprise()
         ))
     end
-
-    bullets = {}
 
     stars = make_stars()
 end
@@ -69,18 +67,13 @@ function love.keypressed(key)
 end
 
 function love.update(dt)
-    for _, ship in ipairs(ships) do
-        update_ship(dt, ship)
+    for _, object in ipairs(objects) do
+        object:update(dt)
     end
 
-    for _, bullet in ipairs(bullets) do
-        update_bullet(dt, bullet)
-    end
+    objects = filter(not_dead, objects)
 
-    bullets = filter(not_dead, bullets)
-    ships = filter(not_dead, ships)
-
-    check_for_collisions(ships)
+    check_for_collisions(objects)
 end
 
 function love.draw()
@@ -91,13 +84,9 @@ function love.draw()
     -- camera.zoom = 0.5 - player.warp.charge * 0.2
     camera:push()
 
-    for _, ship in ipairs(ships) do
-        ship:draw()
-        draw_warp_meter(ship)
-    end
-
-    for _, bullet in ipairs(bullets) do
-        draw_bullet(bullet)
+    for _, object in ipairs(objects) do
+        object:draw()
+        -- draw_warp_meter(object)
     end
 
     camera:pop()
@@ -113,7 +102,7 @@ function love.draw()
         end
 
         local has_player = function() end
-        for k, ship in ipairs(ships) do
+        for k, ship in ipairs(objects) do
             local x = WINDOW_WIDTH / 2 + ship.physics.x / 100
             local y = WINDOW_HEIGHT / 2 + ship.physics.y / 100
             if ship == player then

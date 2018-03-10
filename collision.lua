@@ -64,6 +64,8 @@ add_rule({'ship'}, {'ship'}, function(ship1, ship2)
 end)
 
 add_rule({'ship'}, {'bullet'}, function(ship, bullet)
+    if bullet.owner == ship then return end
+
     local angle = aly.angle(
         ship.physics.x, ship.physics.y,
         bullet.physics.x, bullet.physics.y
