@@ -53,7 +53,7 @@ function collision.check(objects)
     end
 end
 
-collision.add_rule({'ship'}, {'ship'}, function(ship1, ship2)
+collision.add_rule({'ship', 'solid'}, {'ship', 'solid'}, function(ship1, ship2)
     local angle = aly.angle(
         ship1.physics.x, ship1.physics.y,
         ship2.physics.x, ship2.physics.y

@@ -143,6 +143,8 @@ function ship_physics(dt, ship)
 
     ship.physics.x = ship.physics.x + ship.physics.dx
     ship.physics.y = ship.physics.y + ship.physics.dy
+
+    ship.physics.collision.solid = ship.warp.charge
 end
 
 function update_ship(ship, dt)
