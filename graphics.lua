@@ -227,20 +227,29 @@ function draw_bullet(bullet)
     end
 end
 
+greek = {'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'zeta', 'eta', 'theta', 'iota', 'kappa', 'lambda', 'mu', 'nu', 'xi', 'omicron', 'pi', 'rho', 'sigma', 'tau', 'upsilon', 'phi', 'chi', 'psi', 'omega'}
+
 function draw_nav(objects)
+    local size = math.min(WINDOW_WIDTH, WINDOW_HEIGHT)
+    local cell_size = size / 24
     love.graphics.setColor(aly.colors.darkseagreen)
     love.graphics.setLineWidth(1)
-    for x = 0, WINDOW_WIDTH / 100 do
-        for y = 0, WINDOW_HEIGHT / 100 do
-            love.graphics.line(x * 100, y * 100, x * 100 + 100, y * 100)
-            love.graphics.line(x * 100, y * 100, x * 100, y * 100 + 100)
+    for x = 0, 23 do
+        for y = 0, 23 do
+            love.graphics.line(x * cell_size, y * cell_size, (x + 1) * cell_size, y * cell_size)
+            love.graphics.line(x * cell_size, y * cell_size, x * cell_size, (y + 1) * cell_size)
+            if x == 23 then
+                love.graphics.print(greek[y+1], size + 10, 5 + y * cell_size)
+            end
         end
     end
+    love.graphics.line(size, 0, size, size)
+    love.graphics.line(0, size, size,   size)
 
     local has_player = function() end
     for k, ship in ipairs(objects) do
-        local x = WINDOW_WIDTH / 2 + ship.physics.x / 100
-        local y = WINDOW_HEIGHT / 2 + ship.physics.y / 100
+        local x = size / 2 + ship.physics.x / 500
+        local y = size / 2 + ship.physics.y / 500
         if ship == player then
             has_player = function()
                 local x2, y2 = aly.move(x, y, player.physics.angle, 20 + player.warp.charge * 3000)
