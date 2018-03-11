@@ -1,37 +1,39 @@
 Space Tramp
+===========
 
-    Some kind of space game. Ideally it will have lots of combat in a universe
-    to explore. Think an action oriented FTL with star trek themes mixed in.
+Some kind of space game. Ideally it will have lots of combat in a universe
+to explore. Think an action oriented FTL with star trek themes mixed in.
 
-    Right now, all you can do is fly and warp around with a buddy ship.
+Right now, all you can do is fly and warp around with a buddy ship.
 
 Running
+-------
 
-    This program is written in Lua using Love2D 0.10.2.
+This program is written in Lua using Love2D 0.10.2.
 
-    I've been developing under Ubuntu 16.04 using Love2D's PPA
+I've been developing under Ubuntu 16.04 using Love2D's PPA
 
-        sudo add-apt-repository ppa:bartbes/love-stable
-        sudo apt-get update
-        sudo apt-get install love
-        cd space-tramp
-        love .
+    sudo add-apt-repository ppa:bartbes/love-stable
+    sudo apt-get update
+    sudo apt-get install love
+    cd space-tramp
+    love .
 
-    Also works on android!
+Also works on android!
 
-        Go to https://love2d.org/ and download the android runtime.
+    Go to https://love2d.org/ and download the android runtime.
 
-        Run "make build" to generate SpaceTramp.love. Copy this to your phone.
+    Run "make build" to generate SpaceTramp.love. Copy this to your phone.
 
-        Open the .love file with a file browser, open with the love app.
-        (File Manager + seems to work well)
+    Open the .love file with a file browser, open with the love app.
+    (File Manager + seems to work well)
 
-    No reason this shouldn't work on iOS too, but I haven't tested that.
+No reason this shouldn't work on iOS too, but I haven't tested that.
 
 Controls
+--------
 
     Action          Keyboard            Joypad
-
     Steer           left/right arrows   left/right on dpad or left joystick
     Forward         up arrow            A
     Backwards       down arrow          A + down on dpad or left joystick
@@ -41,10 +43,18 @@ Controls
     Communication   H                   right shoulder button/trigger
     Show Navigation tab                 reft shoulder button/trigger
 
-    Touch controls (Imagine the screen is split into big buttons!)
-
+    Action          Button Position
     Steer left      Bottom half of the screen, left side
     Steer right     Bottom half, right side
     Forward         Top half, middle
     Warp            Top half, right
     Navigation      Top half, left
+
+
+Useful Links for Development
+----------------------------
+
+[Unit Testing](https://github.com/Olivine-Labs/busted)
+[Linter](https://github.com/mpeterv/luacheck)
+[Useful Libraries](https://github.com/love2d-community/awesome-love2d)
+[Hot-reloading](https://github.com/rxi/lurker)

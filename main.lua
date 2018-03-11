@@ -13,6 +13,8 @@ require 'collision'
 require 'graphics'
 require 'hud'
 
+
+
 function love.load()
     -- WINDOW_WIDTH, WINDOW_HEIGHT = 1280, 720
     WINDOW_WIDTH, WINDOW_HEIGHT = 900, 900
@@ -67,6 +69,8 @@ function love.keypressed(key)
 end
 
 function love.update(dt)
+    require("lurker").update()
+
     for _, object in ipairs(objects) do
         object:update(dt)
     end
