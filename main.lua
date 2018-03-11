@@ -45,7 +45,7 @@ function love.load()
     player = new_ship(0, 0, player_input, update_ship, draw_fancy)
     table.insert(objects, player)
 
-    for i = 1, 2 do
+    for i = 1, 5 do
         table.insert(objects, new_ship(
             math.random(-1000, 1000),
             math.random(-1000, 1000),
@@ -95,4 +95,6 @@ function love.draw()
     end
 
     draw_meter(player.warp.fuel, player.weapon.energy, player.shields.charge)
+
+    aly.draw_fps()
 end

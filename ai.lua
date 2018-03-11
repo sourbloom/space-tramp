@@ -14,10 +14,12 @@ function gen_follow_behavior(target)
     return function(me)
         local input = {}
 
-        if target.input.warp then
-           input.warp = true
-           me.physics.angle = target.physics.angle
-        else
+        input.warp = love.keyboard.isDown('e')
+
+        -- if target.input.warp then
+           -- input.warp = true
+           -- me.physics.angle = target.physics.angle
+        -- else
             local a = ship_angle_between(me, target)
             local near = ship_distance(me, target) < 200
 
@@ -30,7 +32,7 @@ function gen_follow_behavior(target)
             if not near and ship_speed(me) < 20 then
                 input.forward = true
             end
-        end
+        -- end
 
         return input
     end

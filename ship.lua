@@ -126,7 +126,7 @@ function ship_physics(dt, ship)
             WARP_SPEED,
             WARP_SPEED * 0.8 * dt
         )
-        ship.warp.fuel = aly.step(ship.warp.fuel, 0.0, 1/20*dt)
+        ship.warp.fuel = aly.step(ship.warp.fuel, 0.0, 1/50*dt)
         ship.physics.dx, ship.physics.dy = aly.move(0, 0, ship.physics.angle, ship.warp.speed * dt)
     else
         if ship.warp.speed > 0.1 then
