@@ -37,7 +37,7 @@ end
 function gen_ship_draw(draw_func)
     return function(ship)
         draw_func(ship)
-        draw_warp_meter2(ship)
+        draw_warp_meter(ship)
     end
 end
 

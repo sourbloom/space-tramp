@@ -189,8 +189,8 @@ draw_warp_meter = draw_warp_meter2
 
 function make_stars()
     local stars = {}
-    for i = 1, 90 do
-        local hue = math.random(100, 255)
+    for i = 1, 100 do
+        local hue = math.random(40, 220)
         table.insert(stars, {
             x = math.random(0, WINDOW_WIDTH + STAR_WARP_LINE_LENGTH * 2),
             y = math.random(0, WINDOW_HEIGHT + STAR_WARP_LINE_LENGTH * 2),
