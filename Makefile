@@ -8,4 +8,3 @@ build:
 build_small:
 	zip -9 -r "SpaceTramp.love" *.*
 	du -h "SpaceTramp.love"
-

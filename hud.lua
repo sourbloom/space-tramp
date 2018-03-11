@@ -1,3 +1,5 @@
+local aly = require 'aly'
+
 function draw_guage(x, y, radius, width, color, val)
     love.graphics.setColor(color)
     love.graphics.setLineWidth(width)

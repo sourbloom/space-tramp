@@ -1,19 +1,17 @@
 -- space tramp!
 
 -- util
-require 'aly'
+local aly = require 'aly'
 require 'turtle'
 require 'functional'
 
 -- game code
 require 'controls'
 require 'ship'
-require 'ai'
-require 'collision'
+local ai = require 'ai'
+local collision = require 'collision'
 require 'graphics'
 require 'hud'
-
-
 
 function love.load()
     -- WINDOW_WIDTH, WINDOW_HEIGHT = 1280, 720
@@ -51,7 +49,7 @@ function love.load()
         table.insert(objects, new_ship(
             math.random(-1000, 1000),
             math.random(-1000, 1000),
-            gen_follow_behavior(player),
+            ai.gen_follow_behavior(player),
             update_ship,
             gen_draw_random_enterprise()
         ))
@@ -69,7 +67,7 @@ function love.keypressed(key)
 end
 
 function love.update(dt)
-    require("lurker").update()
+    require("libraries.lurker").update()
 
     for _, object in ipairs(objects) do
         object:update(dt)
@@ -77,7 +75,7 @@ function love.update(dt)
 
     objects = filter(not_dead, objects)
 
-    check_for_collisions(objects)
+    collision.check(objects)
 end
 
 function love.draw()

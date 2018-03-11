@@ -1,4 +1,6 @@
-require 'aly'
+local aly = require 'aly'
+
+local turtle = {}
 
 function new_single_turtle(x, y, angle)
     assert(x and y and angle, 'turtle not getting fed!!')
@@ -148,3 +150,4 @@ function new_turtle(x, y, angle)
     return turtles
 end
 
+return turtle

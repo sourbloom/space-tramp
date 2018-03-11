@@ -1,7 +1,7 @@
 -- aly.lua
 -- This is definitely and old version but oh well, update this when you find a better copy
 
-aly = {}
+local aly = {}
 
 -------------------------------------------------------------------------------
 -- Utilities
@@ -679,3 +679,5 @@ function aly.all_pairs(objects)
     end
     return result
 end
+
+return aly

@@ -1,8 +1,10 @@
-require 'aly'
+local aly = require 'aly'
+
+local collision = {}
 
 local rules = {}
 
-function add_rule(tags1, tags2, func)
+function collision.add_rule(tags1, tags2, func)
     table.insert(rules, {
         tags1 = tags1,
         tags2 = tags2,
@@ -10,7 +12,7 @@ function add_rule(tags1, tags2, func)
     })
 end
 
-function objects_touching(object1, object2)
+function collision.objects_touching(object1, object2)
     local dist = aly.dist(
         object1.physics.x, object1.physics.y,
         object2.physics.x, object2.physics.y
@@ -29,7 +31,7 @@ end
 
 -- print(object_matches_tags({physics = { collision = {'ship', 'solid'} }}, {'ship', 'solid'}))
 
-function objects_match_tags(object1, object2, tags1, tags2)
+function collision.objects_match_tags(object1, object2, tags1, tags2)
     return (
         object_matches_tags(object1, tags1) and
         object_matches_tags(object2, tags2)
@@ -39,19 +41,19 @@ function objects_match_tags(object1, object2, tags1, tags2)
     )
 end
 
-function check_for_collisions(objects)
+function collision.check(objects)
     for _, pairing in ipairs(aly.all_pairs(objects)) do
         local object1, object2 = unpack(pairing)
         for _, rule in ipairs(rules) do
-            if objects_match_tags(object1, object2, rule.tags1, rule.tags2) and
-               objects_touching(object1, object2) then
+            if collision.objects_match_tags(object1, object2, rule.tags1, rule.tags2) and
+               collision.objects_touching(object1, object2) then
                 rule.func(object1, object2)
             end
         end
     end
 end
 
-add_rule({'ship'}, {'ship'}, function(ship1, ship2)
+collision.add_rule({'ship'}, {'ship'}, function(ship1, ship2)
     local angle = aly.angle(
         ship1.physics.x, ship1.physics.y,
         ship2.physics.x, ship2.physics.y
@@ -63,7 +65,7 @@ add_rule({'ship'}, {'ship'}, function(ship1, ship2)
     ship2.physics.dx, ship2.physics.dy = aly.move(0, 0, angle, avg_speed)
 end)
 
-add_rule({'ship'}, {'bullet'}, function(ship, bullet)
+collision.add_rule({'ship'}, {'bullet'}, function(ship, bullet)
     if bullet.owner == ship then return end
 
     local angle = aly.angle(
@@ -73,3 +75,5 @@ add_rule({'ship'}, {'bullet'}, function(ship, bullet)
     ship.physics.dx, ship.physics.dy = aly.move(0, 0, angle+math.pi, 15)
     bullet.dead = true
 end)
+
+return collision

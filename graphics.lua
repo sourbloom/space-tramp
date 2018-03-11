@@ -1,3 +1,5 @@
+local aly = require 'aly'
+
 function draw_spinny(ship)
     local t = new_turtle(ship.physics.x, ship.physics.y, ship.physics.angle)
     t.pen_color(aly.colors.antiquewhite)

@@ -1,3 +1,5 @@
+local aly = require 'aly'
+
 function new_ship(x, y, behavior, update, draw)
     return {
         behavior = behavior,
