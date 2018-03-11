@@ -224,3 +224,34 @@ function draw_bullet(bullet)
         love.graphics.circle('fill', bullet.physics.x, bullet.physics.y, 10)
     end
 end
+
+function draw_nav(objects)
+    love.graphics.setColor(aly.colors.darkseagreen)
+    love.graphics.setLineWidth(1)
+    for x = 0, WINDOW_WIDTH / 100 do
+        for y = 0, WINDOW_HEIGHT / 100 do
+            love.graphics.line(x * 100, y * 100, x * 100 + 100, y * 100)
+            love.graphics.line(x * 100, y * 100, x * 100, y * 100 + 100)
+        end
+    end
+
+    local has_player = function() end
+    for k, ship in ipairs(objects) do
+        local x = WINDOW_WIDTH / 2 + ship.physics.x / 100
+        local y = WINDOW_HEIGHT / 2 + ship.physics.y / 100
+        if ship == player then
+            has_player = function()
+                local x2, y2 = aly.move(x, y, player.physics.angle, 20 + player.warp.charge * 3000)
+                love.graphics.setColor(aly.colors.darkseagreen)
+                love.graphics.circle('fill', x, y, 3)
+                love.graphics.setColor(aly.colors.white)
+                love.graphics.line(x, y, x2, y2)
+            end
+        else
+            love.graphics.setColor(aly.colors.blue)
+            love.graphics.circle('fill', x, y, 3)
+        end
+    end
+
+    has_player()
+end

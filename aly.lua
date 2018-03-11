@@ -260,12 +260,13 @@ end
 
 -- debuging functions
 
-function aly.print_centered(text, x, y)
+function aly.print_centered(text, x, y, a)
     local font = love.graphics.getFont()
     love.graphics.print(
         text,
         x - (font:getWidth(text) / 2),
-        y - (font:getHeight() / 2)
+        y - (font:getHeight() / 2),
+        a
     )
 end
 
