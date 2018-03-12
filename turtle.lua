@@ -1,8 +1,8 @@
-local aly = require 'aly'
+local aly = require('aly')
 
 local turtle = {}
 
-function new_single_turtle(x, y, angle)
+function turtle.new_single_turtle(x, y, angle)
     assert(x and y and angle, 'turtle not getting fed!!')
 
     local x, y, angle = x, y, angle
@@ -74,9 +74,9 @@ function new_single_turtle(x, y, angle)
     return turtle
 end
 
-function new_turtle(x, y, angle)
-    local t1 = new_single_turtle(x, y, angle)
-    local t2 = new_single_turtle(x, y, angle)
+function turtle.new(x, y, angle)
+    local t1 = turtle.new_single_turtle(x, y, angle)
+    local t2 = turtle.new_single_turtle(x, y, angle)
 
     local mirror = false
     local pen_state = true

@@ -1,4 +1,4 @@
-local aly = require 'aly'
+local aly = require('aly')
 
 -- 8Bitdo SNES30 GamePad
 local guid = "05000000c82d00004028000000010000"

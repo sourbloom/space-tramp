@@ -1,11 +1,7 @@
-local aly = require 'aly'
+local aly = require('aly')
 
 function new_ship(x, y, behavior, update, draw)
     return {
-        behavior = behavior,
-        update = update,
-        draw = gen_ship_draw(draw),
-
         physics = {
             x = x,
             y = y,
@@ -30,6 +26,11 @@ function new_ship(x, y, behavior, update, draw)
         shields = {
             charge = 1.0
         },
+
+        behavior = behavior,
+        update = update,
+        draw = gen_ship_draw(draw),
+
         input = {},
     }
 end

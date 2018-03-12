@@ -1,17 +1,17 @@
 -- space tramp!
 
 -- util
-local aly = require 'aly'
-require 'turtle'
-require 'functional'
+local aly = require('aly')
+require('turtle')
+require('functional')
 
 -- game code
-require 'controls'
-require 'ship'
-local ai = require 'ai'
-local collision = require 'collision'
-require 'graphics'
-require 'hud'
+require('controls')
+require('ship')
+local ai = require('ai')
+local collision = require('collision')
+require('graphics')
+local hud = require('hud')
 
 function love.load()
     -- WINDOW_WIDTH, WINDOW_HEIGHT = 1280, 720
@@ -23,10 +23,6 @@ function love.load()
     WARP_ROTATION = math.pi / 14
     WARP_SPEED = 7000
     STAR_WARP_LINE_LENGTH = 150
-
-    WARP_COLOR = aly.colors.dodgerblue
-    WEAPON_COLOR = aly.colors.crimson
-    SHIELD_COLOR = aly.colors.blueviolet
 
     camera = aly.Camera()
     camera.zoom = 0.4
@@ -67,7 +63,7 @@ function love.keypressed(key)
 end
 
 function love.update(dt)
-    -- require("libraries.lurker").update()
+    -- require("libraries.lurker").update())
 
     for _, object in ipairs(objects) do
         object:update(dt)
@@ -96,7 +92,7 @@ function love.draw()
         draw_nav(objects)
     end
 
-    draw_meter(player.warp.fuel, player.weapon.energy, player.shields.charge)
+    hud.draw_meter(player.warp.fuel, player.weapon.energy, player.shields.charge)
 
     aly.draw_fps()
 end

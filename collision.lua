@@ -1,4 +1,4 @@
-local aly = require 'aly'
+local aly = require('aly')
 
 local collision = {}
 

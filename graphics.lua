@@ -1,7 +1,9 @@
-local aly = require 'aly'
+local aly = require('aly')
+local turtle = require('turtle')
+local palette = require('palette')
 
 function draw_spinny(ship)
-    local t = new_turtle(ship.physics.x, ship.physics.y, ship.physics.angle)
+    local t = turtle.new(ship.physics.x, ship.physics.y, ship.physics.angle)
     t.pen_color(aly.colors.antiquewhite)
     t.pen_width(3)
 
@@ -16,7 +18,7 @@ function draw_spinny(ship)
 end
 
 function draw_enterprise(ship, color, head_radius, body_length, engine_length, engine_dist, body_thickness)
-    local t = new_turtle(ship.physics.x, ship.physics.y, ship.physics.angle)
+    local t = turtle.new(ship.physics.x, ship.physics.y, ship.physics.angle)
     t.pen_color(color)
     t.pen_width(body_thickness)
 
@@ -85,7 +87,7 @@ function gen_draw_random_enterprise()
 end
 
 function draw_fancy(ship)
-    local t = new_turtle(ship.physics.x, ship.physics.y, ship.physics.angle)
+    local t = turtle.new(ship.physics.x, ship.physics.y, ship.physics.angle)
     t.pen_color(aly.colors.green)
     t.pen_width(3)
 
@@ -107,7 +109,7 @@ function draw_fancy(ship)
 end
 
 function draw_triangle(ship)
-    local t = new_turtle(ship.physics.x, ship.physics.y, ship.physics.angle)
+    local t = turtle.new(ship.physics.x, ship.physics.y, ship.physics.angle)
     t.pen_color(aly.colors.red)
     t.pen_width(3)
 
@@ -134,7 +136,7 @@ function draw_triangle(ship)
 end
 
 function draw_test_ship(ship)
-    local t = new_turtle(ship.physics.x, ship.physics.y, ship.physics.angle)
+    local t = turtle.new(ship.physics.x, ship.physics.y, ship.physics.angle)
     t.pen_color(aly.colors.lightslategray)
     t.pen_width(3)
 
@@ -149,7 +151,7 @@ end
 
 function draw_warp_meter1(ship)
     if ship.warp.charge > 0 then
-        love.graphics.setColor(WARP_COLOR)
+        love.graphics.setColor(palette.warp)
         love.graphics.setLineWidth(2 + 2 * ship.warp.charge)
         love.graphics.arc(
             'line',
@@ -172,7 +174,7 @@ end
 
 function draw_warp_meter2(ship)
     if ship.warp.charge > 0 and ship.warp.charge < 1.0 then
-        love.graphics.setColor(aly.colors.dodgerblue)
+        love.graphics.setColor(palette.warp)
         love.graphics.setLineWidth(10)
         love.graphics.arc(
             'line',
