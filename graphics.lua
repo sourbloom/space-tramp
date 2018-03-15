@@ -198,8 +198,8 @@ function make_stars()
     for i = 1, 100 do
         local hue = math.random(40, 220)
         table.insert(stars, {
-            x = math.random(0, love.graphics.getWidth() + STAR_WARP_LINE_LENGTH * 2),
-            y = math.random(0, love.graphics.getHeight() + STAR_WARP_LINE_LENGTH * 2),
+            x = math.random(0, 999999 + STAR_WARP_LINE_LENGTH * 2),
+            y = math.random(0, 999999 + STAR_WARP_LINE_LENGTH * 2),
             r = 1 + math.random() * 3,
             color = { hue, hue, hue }
         })
