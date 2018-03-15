@@ -5,6 +5,8 @@ local aly = require('aly')
 require('turtle')
 require('functional')
 
+require 'libraries.hump.timer'
+
 -- game code
 require('controls')
 require('ship')
@@ -63,7 +65,7 @@ function love.keypressed(key)
 end
 
 function love.update(dt)
-    require("libraries.lurker").update()
+    require("libraries.lurker.lurker").update()
 
     for _, object in ipairs(objects) do
         object:update(dt)
