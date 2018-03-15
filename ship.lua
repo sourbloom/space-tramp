@@ -1,4 +1,4 @@
-local aly = require('aly')
+local aly = require('util.aly')
 
 function new_ship(x, y, behavior, update, draw)
     return {

@@ -1,5 +1,5 @@
-local aly = require('aly')
-local turtle = require('turtle')
+local aly = require('util.aly')
+local turtle = require('util.turtle')
 local palette = require('palette')
 
 function draw_spinny(ship)
@@ -61,6 +61,10 @@ function normal_enterprise(ship)
         engine_dist,
         body_thickness
     )
+end
+
+function get_window_size()
+    return math.min(love.graphics.getWidth(), love.graphics.getHeight())
 end
 
 function gen_draw_random_enterprise()
@@ -194,8 +198,8 @@ function make_stars()
     for i = 1, 100 do
         local hue = math.random(40, 220)
         table.insert(stars, {
-            x = math.random(0, WINDOW_WIDTH + STAR_WARP_LINE_LENGTH * 2),
-            y = math.random(0, WINDOW_HEIGHT + STAR_WARP_LINE_LENGTH * 2),
+            x = math.random(0, love.graphics.getWidth() + STAR_WARP_LINE_LENGTH * 2),
+            y = math.random(0, love.graphics.getHeight() + STAR_WARP_LINE_LENGTH * 2),
             r = 1 + math.random() * 3,
             color = { hue, hue, hue }
         })
@@ -206,8 +210,8 @@ end
 function draw_stars(stars, camera)
     for i, star in ipairs(stars) do
         love.graphics.setColor(star.color)
-        local x = ((star.x - (camera.x / (-star.r + 5))) % (WINDOW_WIDTH + STAR_WARP_LINE_LENGTH * 2)) - STAR_WARP_LINE_LENGTH
-        local y = ((star.y - (camera.y / (-star.r + 5))) % (WINDOW_HEIGHT + STAR_WARP_LINE_LENGTH * 2)) - STAR_WARP_LINE_LENGTH
+        local x = ((star.x - (camera.x / (-star.r + 5))) % (love.graphics.getWidth() + STAR_WARP_LINE_LENGTH * 2)) - STAR_WARP_LINE_LENGTH
+        local y = ((star.y - (camera.y / (-star.r + 5))) % (love.graphics.getHeight() + STAR_WARP_LINE_LENGTH * 2)) - STAR_WARP_LINE_LENGTH
         if player.warp.speed > 0.01 then
             local x2, y2 = aly.move(
                 x, y,
@@ -232,7 +236,7 @@ end
 greek = {'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'zeta', 'eta', 'theta', 'iota', 'kappa', 'lambda', 'mu', 'nu', 'xi', 'omicron', 'pi', 'rho', 'sigma', 'tau', 'upsilon', 'phi', 'chi', 'psi', 'omega'}
 
 function draw_nav(objects)
-    local size = math.min(WINDOW_WIDTH, WINDOW_HEIGHT)
+    local size = math.min(love.graphics.getWidth(), love.graphics.getHeight())
     local cell_size = size / 24
     love.graphics.setColor(aly.colors.darkseagreen)
     love.graphics.setLineWidth(1)

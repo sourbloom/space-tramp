@@ -1,14 +1,14 @@
 -- space tramp!
 
 -- util
-local aly = require('aly')
-require('turtle')
-require('functional')
+local aly = require('util.aly')
+require('util.turtle')
+require('libraries.functional')
 
-require 'libraries.hump.timer'
+require('libraries.hump.timer')
 
 -- game code
-require('controls')
+local controls = require('controls')
 require('ship')
 local ai = require('ai')
 local collision = require('collision')
@@ -16,8 +16,10 @@ require('graphics')
 local hud = require('hud')
 
 function love.load()
-    -- WINDOW_WIDTH, WINDOW_HEIGHT = 1280, 720
-    WINDOW_WIDTH, WINDOW_HEIGHT = 900, 900
+    love.window.setMode(500, 500, {resizable = true})
+
+    math.randomseed(os.time())
+
     MAX_SPEED = 10
     ACCEL = 10
     DRAG = 0.15
@@ -31,16 +33,12 @@ function love.load()
 
     if love.system.getOS() == 'Android' or love.system.getOS() == 'iOS' then
         camera.zoom = 1
-        WINDOW_WIDTH, WINDOW_HEIGHT = love.window.getDesktopDimensions()
+        -- love.graphics.getWidth(), love.graphics.getHeight() = love.window.getDesktopDimensions()
     end
-
-    love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-
-    math.randomseed(os.time())
 
     objects = {}
 
-    player = new_ship(0, 0, player_input, update_ship, draw_fancy)
+    player = new_ship(0, 0, controls.player_input, update_ship, draw_fancy)
     table.insert(objects, player)
 
     for i = 1, 5 do
@@ -81,7 +79,7 @@ function love.draw()
 
     camera.x = player.physics.x
     camera.y = player.physics.y
-    -- camera.zoom = 0.5 - player.warp.charge * 0.2
+    camera.zoom = 0.5 * get_window_size() / 1000
     camera:push()
 
     for _, object in ipairs(objects) do
