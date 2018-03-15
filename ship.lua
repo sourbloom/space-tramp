@@ -10,7 +10,6 @@ function new_ship(x, y, behavior, update, draw)
             dy = math.random(-3, 3),
             size = 26,
             collision = {
-                'solid',
                 'ship'
             }
         },
