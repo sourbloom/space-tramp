@@ -5,7 +5,7 @@ local aly = require('util.aly')
 require('util.turtle')
 require('libraries.functional')
 
-require('libraries.hump.timer')
+timer = require('libraries.hump.timer')
 
 -- game code
 local controls = require('controls')
@@ -14,9 +14,10 @@ local ai = require('ai')
 local collision = require('collision')
 require('graphics')
 local hud = require('hud')
+local network_node = require('network_node')
 
 function love.load()
-    love.window.setMode(500, 500, {resizable = true})
+    -- love.window.setMode(500, 500, {resizable = true})
 
     math.randomseed(os.time())
 
@@ -25,16 +26,10 @@ function love.load()
     DRAG = 0.15
     ROTATION = math.pi * 3 / 2
     WARP_ROTATION = math.pi / 14
-    WARP_SPEED = 7000
+    WARP_SPEED = 15000
     STAR_WARP_LINE_LENGTH = 150
 
     camera = aly.Camera()
-    camera.zoom = 0.4
-
-    if love.system.getOS() == 'Android' or love.system.getOS() == 'iOS' then
-        camera.zoom = 1
-        -- love.graphics.getWidth(), love.graphics.getHeight() = love.window.getDesktopDimensions()
-    end
 
     objects = {}
 
@@ -51,14 +46,36 @@ function love.load()
         ))
     end
 
+    local network = {}
+    for i = 1, 5 do
+        table.insert(network, network_node.new(
+            math.random(-200000, 200000),
+            math.random(-200000, 200000)
+        ))
+    end
+
+    local i = 3
+    while i > 0 do
+        local n1 = aly.choice(network)
+        local n2 = aly.choice(network)
+        if n1 ~= n2 and not aly.contains_value(n1.neighbors, n2) then
+            n1:attach(n2)
+            i = i - 1
+        end
+    end
+
+    for _, node in ipairs(network) do
+        table.insert(objects, node)
+    end
+
     stars = make_stars()
 end
 
 function love.keypressed(key)
     if key == 'escape' or key == 'q' then
         love.event.push('quit')
-    -- elseif key == 'f11' then
-    --     love.window.setFullscreen(not love.window.getFullscreen(), 'desktop')
+    elseif key == 'f11' then
+        love.window.setFullscreen(not love.window.getFullscreen(), 'desktop')
     end
 end
 
@@ -92,7 +109,11 @@ function love.draw()
         draw_nav(objects)
     end
 
-    hud.draw_meter(player.warp.fuel, player.weapon.energy, player.shields.charge)
+    hud.draw_meter(
+        player.warp.fuel,
+        player.weapon.energy,
+        player.shields.charge
+    )
 
     aly.draw_fps()
 end

@@ -198,8 +198,8 @@ function make_stars()
     for i = 1, 100 do
         local hue = math.random(40, 220)
         table.insert(stars, {
-            x = math.random(0, 999999 + STAR_WARP_LINE_LENGTH * 2),
-            y = math.random(0, 999999 + STAR_WARP_LINE_LENGTH * 2),
+            x = math.random(0, 999999),
+            y = math.random(0, 999999),
             r = 1 + math.random() * 3,
             color = { hue, hue, hue }
         })
@@ -210,9 +210,10 @@ end
 function draw_stars(stars, camera)
     for i, star in ipairs(stars) do
         love.graphics.setColor(star.color)
-        local x = ((star.x - (camera.x / (-star.r + 5))) % (love.graphics.getWidth() + STAR_WARP_LINE_LENGTH * 2)) - STAR_WARP_LINE_LENGTH
-        local y = ((star.y - (camera.y / (-star.r + 5))) % (love.graphics.getHeight() + STAR_WARP_LINE_LENGTH * 2)) - STAR_WARP_LINE_LENGTH
+        local x = ((star.x - (camera.x * camera.zoom / (-star.r + 5))) % (love.graphics.getWidth() + STAR_WARP_LINE_LENGTH * 2)) - STAR_WARP_LINE_LENGTH
+        local y = ((star.y - (camera.y * camera.zoom / (-star.r + 5))) % (love.graphics.getHeight() + STAR_WARP_LINE_LENGTH * 2)) - STAR_WARP_LINE_LENGTH
         if player.warp.speed > 0.01 then
+            local pspeed = aly.dist(0, 0, player.physics.dx, player.physics.dy)
             local x2, y2 = aly.move(
                 x, y,
                 player.physics.angle + math.pi,
@@ -235,6 +236,12 @@ end
 
 greek = {'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'zeta', 'eta', 'theta', 'iota', 'kappa', 'lambda', 'mu', 'nu', 'xi', 'omicron', 'pi', 'rho', 'sigma', 'tau', 'upsilon', 'phi', 'chi', 'psi', 'omega'}
 
+function nav_draw_dot(x, y, color, radius)
+    love.graphics.setLineWidth(2)
+    love.graphics.setColor(color or aly.colors.blue)
+    love.graphics.circle((radius or 3) < 4 and 'fill' or 'line', x, y, radius or 3)
+end
+
 function draw_nav(objects)
     local size = math.min(love.graphics.getWidth(), love.graphics.getHeight())
     local cell_size = size / 24
@@ -250,25 +257,35 @@ function draw_nav(objects)
         end
     end
     love.graphics.line(size, 0, size, size)
-    love.graphics.line(0, size, size,   size)
+    love.graphics.line(0, size, size, size)
 
-    local has_player = function() end
-    for k, ship in ipairs(objects) do
-        local x = size / 2 + ship.physics.x / 500
-        local y = size / 2 + ship.physics.y / 500
-        if ship == player then
-            has_player = function()
-                local x2, y2 = aly.move(x, y, player.physics.angle, 20 + player.warp.charge * 3000)
-                love.graphics.setColor(aly.colors.darkseagreen)
-                love.graphics.circle('fill', x, y, 3)
-                love.graphics.setColor(aly.colors.white)
+    local x, y
+    for k, object in ipairs(objects) do
+        x = size / 2 + object.physics.x / 500
+        y = size / 2 + object.physics.y / 500
+
+        if object == player then
+            local x2, y2 = aly.move(
+                x,
+                y,
+                player.physics.angle,
+                20 + player.warp.charge * 3000
+            )
+            nav_draw_dot(x, y)
+            love.graphics.setColor(aly.colors.white)
+            love.graphics.setLineWidth(1)
+            love.graphics.line(x, y, x2, y2)
+        elseif aly.contains_value(object.physics.collision, 'network') then
+            nav_draw_dot(x, y, palette.warp, 15)
+            for _, node in ipairs(object.neighbors) do
+                local x2 = size / 2 + node.physics.x / 500
+                local y2 = size / 2 + node.physics.y / 500
+                love.graphics.setLineWidth(3)
+                love.graphics.setColor(palette.warp)
                 love.graphics.line(x, y, x2, y2)
             end
         else
-            love.graphics.setColor(aly.colors.blue)
-            love.graphics.circle('fill', x, y, 3)
+            nav_draw_dot(x, y)
         end
     end
-
-    has_player()
 end

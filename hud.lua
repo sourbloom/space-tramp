@@ -36,7 +36,7 @@ function hud.draw_meter(warp, weapons, shields)
         0,
         love.graphics.getHeight(),
         get_window_size()/8,
-        get_window_size()/13,
+        get_window_size()/18,
         palette.warp,
         warp,
         'WARP'
@@ -44,8 +44,8 @@ function hud.draw_meter(warp, weapons, shields)
     hud.draw_guage_with_background(
         0,
         love.graphics.getHeight(),
-        get_window_size()/8 + get_window_size()/13,
-        get_window_size()/13,
+        get_window_size()/8 + get_window_size()/18,
+        get_window_size()/18,
         palette.weapon,
         weapons,
         'WEAPON'
@@ -53,8 +53,8 @@ function hud.draw_meter(warp, weapons, shields)
     hud.draw_guage_with_background(
         0,
         love.graphics.getHeight(),
-        get_window_size()/8 + get_window_size()/13*2,
-        get_window_size()/13,
+        get_window_size()/8 + get_window_size()/18*2,
+        get_window_size()/18,
         palette.shield,
         shields,
         'SHIELD'
