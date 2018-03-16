@@ -1,4 +1,7 @@
 local aly = require('util.aly')
+local turtle = require('util.turtle')
+local palette = require('palette')
+local misc = require('util.misc')
 
 local ship = {}
 
@@ -39,7 +42,7 @@ end
 function ship.gen_ship_draw(draw_func)
     return function(s)
         draw_func(s)
-        draw_warp_meter(s)
+        ship.draw_warp_meter1(s)
     end
 end
 
@@ -162,6 +165,187 @@ function update_bullet(bullet, dt)
         bullet.physics.y = bullet.physics.y + bullet.physics.dy
     else
         bullet.dead = true
+    end
+end
+
+
+function ship.draw_spinny(s)
+    local t = turtle.new(s.physics.x, s.physics.y, s.physics.angle)
+    t.pen_color(aly.colors.antiquewhite)
+    t.pen_width(3)
+
+    local size = 50
+
+    t.forward(size*2)
+    t.back(size*2)
+    for i = 0, size do
+        t.forward(i)
+        t.right(math.pi/6)
+    end
+end
+
+function ship.draw_enterprise(s, color, head_radius, body_length, engine_length, engine_dist, body_thickness)
+    local t = turtle.new(s.physics.x, s.physics.y, s.physics.angle)
+    t.pen_color(color)
+    t.pen_width(body_thickness)
+
+    t.forward(body_length / 2)
+
+    -- body
+    t.circle(head_radius)
+    t.right(math.pi)
+    t.forward(body_length)
+
+    t.mirror(true)
+
+    -- engines
+    t.right(math.pi / 2)
+    t.forward(engine_dist / 2)
+    t.right(math.pi / 2)
+    t.forward(engine_length / 2)
+    t.back(engine_length)
+    t.forward(engine_length / 2)
+    t.right(math.pi / 2)
+end
+
+function ship.normal_enterprise(s)
+    local color = aly.colors.lightslategray
+    local head_radius = 14
+    local body_length = 25
+    local engine_length = 16
+    local engine_dist = 26
+    local body_thickness = 6
+    ship.draw_enterprise(
+        s,
+        color,
+        head_radius,
+        body_length,
+        engine_length,
+        engine_dist,
+        body_thickness
+    )
+end
+function ship.gen_draw_random_enterprise()
+    local color = aly.copy(aly.colors.lightslategray)
+    color[1] = misc.clamp_color(color[1] + math.random(-50, 50))
+    color[2] = misc.clamp_color(color[2] + math.random(-50, 50))
+    color[3] = misc.clamp_color(color[3] + math.random(-50, 50))
+    local head_radius = 14 + math.random(0, 8)
+    local body_length = 25 + math.random(-2, 10)
+    local engine_length = 16 + math.random(-5, 5)
+    local engine_dist = 26 + math.random(-5, 5)
+    local body_thickness = 6 + math.random(-4, 4)
+    return function(s)
+        ship.draw_enterprise(
+            s,
+            color,
+            head_radius,
+            body_length,
+            engine_length,
+            engine_dist,
+            body_thickness
+        )
+    end
+end
+
+function ship.draw_fancy(s)
+    local t = turtle.new(s.physics.x, s.physics.y, s.physics.angle)
+    t.pen_color(aly.colors.green)
+    t.pen_width(3)
+
+    t.pen(false)
+    -- t.back(30)
+    t.push()
+    t.forward(30)
+    t.pen(true)
+    t.mirror(true)
+    t.right(math.pi*5/6)
+    t.forward(30)
+    t.left(math.pi/7)
+    t.forward(20)
+    t.left(math.pi/3)
+    t.forward(10)
+    t.right(math.pi*3/4)
+    t.forward(20)
+    t.pop()
+end
+
+function ship.draw_triangle(s)
+    local t = turtle.new(s.physics.x, s.physics.y, s.physics.angle)
+    t.pen_color(aly.colors.red)
+    t.pen_width(3)
+
+    t.pen(false)
+    t.forward(30)
+    t.pen(true)
+    t.right(5*math.pi/6)
+    t.forward(60)
+    t.back(60)
+    t.left(5*math.pi/6)
+    t.left(5*math.pi/6)
+    t.forward(60)
+    t.back(60)
+    t.right(5*math.pi/6)
+    t.pen(false)
+    t.back(40)
+    t.right(math.pi/4)
+    t.pen(true)
+    t.forward(20)
+    t.back(20)
+    t.left(math.pi/4)
+    t.left(math.pi/4)
+    t.forward(20)
+end
+
+function ship.draw_test_ship(s)
+    local t = turtle.new(s.physics.x, s.physics.y, s.physics.angle)
+    t.pen_color(aly.colors.lightslategray)
+    t.pen_width(3)
+
+    t.back(30)
+    t.forward(60)
+    t.mirror(true)
+    for i = 1, 10 do
+        t.right(math.pi/8)
+        t.forward(20)
+    end
+end
+
+function ship.draw_warp_meter1(s)
+    if s.warp.charge > 0 then
+        love.graphics.setColor(palette.warp)
+        love.graphics.setLineWidth(2 + 2 * s.warp.charge)
+        love.graphics.arc(
+            'line',
+            'open',
+            math.floor(s.physics.x), math.floor(s.physics.y),
+            60,
+            s.physics.angle + math.pi,
+            s.physics.angle + math.pi + math.pi * s.warp.charge
+        )
+        love.graphics.arc(
+            'line',
+            'open',
+            math.floor(s.physics.x), math.floor(s.physics.y),
+            60,
+            s.physics.angle + math.pi,
+            s.physics.angle + math.pi - math.pi * s.warp.charge
+        )
+    end
+end
+
+function ship.draw_warp_meter2(s)
+    if s.warp.charge > 0 and s.warp.charge < 1.0 then
+        love.graphics.setColor(palette.warp)
+        love.graphics.setLineWidth(10)
+        love.graphics.arc(
+            'line',
+            'open',
+            math.floor(s.physics.x), math.floor(s.physics.y),
+            60,
+            s.physics.angle,
+            s.physics.angle + math.pi * 2 * s.warp.charge
+        )
     end
 end
 

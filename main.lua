@@ -2,7 +2,7 @@
 
 -- util
 local aly = require('util.aly')
-require('util.turtle')
+local misc = require('util.misc')
 require('libraries.functional')
 
 timer = require('libraries.hump.timer')
@@ -37,7 +37,7 @@ function love.load()
         0, 0,
         controls.player_input,
         ship.update_ship,
-        draw_fancy
+        ship.gen_draw_random_enterprise()
     )
     table.insert(objects, player)
 
@@ -47,7 +47,7 @@ function love.load()
             math.random(-1000, 1000),
             ai.gen_follow_behavior(player),
             ship.update_ship,
-            gen_draw_random_enterprise()
+            ship.gen_draw_random_enterprise()
         ))
     end
 
@@ -84,10 +84,6 @@ function love.keypressed(key)
     end
 end
 
-local function not_dead(t)
-    return not t.dead
-end
-
 function love.update(dt)
     require("libraries.lurker.lurker").update()
 
@@ -95,7 +91,7 @@ function love.update(dt)
         object:update(dt)
     end
 
-    objects = filter(not_dead, objects)
+    objects = filter(misc.not_dead, objects)
 
     collision.check(objects)
 end
