@@ -10,4 +10,11 @@ function misc.not_dead(t)
     return not t.dead
 end
 
+function misc.chain_funcs(func1, func2)
+    return function(...)
+        func1(...)
+        func2(...)
+    end
+end
+
 return misc

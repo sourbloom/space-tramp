@@ -33,20 +33,23 @@ function spaceship.new(x, y, behavior, draw)
 
         behavior = behavior,
         update = spaceship.update_ship,
-        draw = spaceship.gen_ship_draw(draw),
+        draw = misc.chain_funcs(
+            draw,
+            spaceship.draw_warp_meter2
+        ),
 
         input = {},
     }
 end
 
-function spaceship.gen_ship_draw(draw_func)
+function spaceship.gen_draw(draw_func)
     return function(ship)
         draw_func(ship)
         spaceship.draw_warp_meter2(ship)
     end
 end
 
-function spaceship.ship_process_input_movement(dt, ship)
+function spaceship.process_input_movement(dt, ship)
     if ship.warp.charge == 1.0 then
         if ship.input.left then
             ship.physics.angle = ship.physics.angle - (WARP_ROTATION * dt)
@@ -74,7 +77,7 @@ function spaceship.ship_process_input_movement(dt, ship)
     end
 end
 
-function spaceship.ship_process_input_weapon(dt, ship)
+function spaceship.process_input_weapon(dt, ship)
     if ship.weapon.delay > 0 then
         ship.weapon.delay = ship.weapon.delay - 1 * dt
     else
@@ -88,7 +91,7 @@ function spaceship.ship_process_input_weapon(dt, ship)
                     size = 5,
                     collision = {'bullet'}
                 },
-                owner = s,
+                owner = ship,
                 life = 1,
                 dead = false,
                 update = update_bullet,
@@ -105,7 +108,7 @@ function spaceship.ship_process_input_weapon(dt, ship)
     end
 end
 
-function spaceship.ship_process_input_warp(dt, ship)
+function spaceship.process_input_warp(dt, ship)
     if ship.input.warp and ship.warp.fuel > 0.0 then
         ship.warp.charge = aly.step(ship.warp.charge, 1.0, (1/2 * dt))
     else
@@ -113,10 +116,10 @@ function spaceship.ship_process_input_warp(dt, ship)
     end
 end
 
-function spaceship.ship_process_input(dt, ship)
-    spaceship.ship_process_input_movement(dt, ship)
-    spaceship.ship_process_input_warp(dt, ship)
-    spaceship.ship_process_input_weapon(dt, ship)
+function spaceship.process_input(dt, ship)
+    spaceship.process_input_movement(dt, ship)
+    spaceship.process_input_warp(dt, ship)
+    spaceship.process_input_weapon(dt, ship)
 end
 
 function spaceship.limit_vector_distance(dx, dy, limit)
@@ -126,7 +129,7 @@ function spaceship.limit_vector_distance(dx, dy, limit)
     return dx, dy
 end
 
-function spaceship.ship_physics(dt, ship)
+function spaceship.physics(dt, ship)
     if ship.warp.charge == 1.0 then
         ship.warp.speed = aly.step(
             ship.warp.speed,
@@ -154,8 +157,8 @@ end
 
 function spaceship.update_ship(ship, dt)
     ship.input = ship:behavior()
-    spaceship.ship_process_input(dt, ship)
-    spaceship.ship_physics(dt, ship)
+    spaceship.process_input(dt, ship)
+    spaceship.physics(dt, ship)
 end
 
 function update_bullet(bullet, dt)
@@ -167,7 +170,6 @@ function update_bullet(bullet, dt)
         bullet.dead = true
     end
 end
-
 
 function spaceship.draw_spinny(ship)
     local t = turtle.new(ship.physics.x, ship.physics.y, ship.physics.angle)
