@@ -3,9 +3,9 @@ local turtle = require('util.turtle')
 local palette = require('palette')
 local misc = require('util.misc')
 
-local ship = {}
+local spaceship = {}
 
-function ship.new(x, y, behavior, update, draw)
+function spaceship.new(x, y, behavior, draw)
     return {
         physics = {
             x = x,
@@ -32,21 +32,21 @@ function ship.new(x, y, behavior, update, draw)
         },
 
         behavior = behavior,
-        update = update,
-        draw = ship.gen_ship_draw(draw),
+        update = spaceship.update_ship,
+        draw = spaceship.gen_ship_draw(draw),
 
         input = {},
     }
 end
 
-function ship.gen_ship_draw(draw_func)
+function spaceship.gen_ship_draw(draw_func)
     return function(s)
         draw_func(s)
-        ship.draw_warp_meter1(s)
+        spaceship.draw_warp_meter1(s)
     end
 end
 
-function ship.ship_process_input_movement(dt, s)
+function spaceship.ship_process_input_movement(dt, s)
     if s.warp.charge == 1.0 then
         if s.input.left then
             s.physics.angle = s.physics.angle - (WARP_ROTATION * dt)
@@ -74,7 +74,7 @@ function ship.ship_process_input_movement(dt, s)
     end
 end
 
-function ship.ship_process_input_weapon(dt, s)
+function spaceship.ship_process_input_weapon(dt, s)
     if s.weapon.delay > 0 then
         s.weapon.delay = s.weapon.delay - 1 * dt
     else
@@ -105,7 +105,7 @@ function ship.ship_process_input_weapon(dt, s)
     end
 end
 
-function ship.ship_process_input_warp(dt, s)
+function spaceship.ship_process_input_warp(dt, s)
     if s.input.warp and s.warp.fuel > 0.0 then
         s.warp.charge = aly.step(s.warp.charge, 1.0, (1/2 * dt))
     else
@@ -113,20 +113,20 @@ function ship.ship_process_input_warp(dt, s)
     end
 end
 
-function ship.ship_process_input(dt, s)
-    ship.ship_process_input_movement(dt, s)
-    ship.ship_process_input_warp(dt, s)
-    ship.ship_process_input_weapon(dt, s)
+function spaceship.ship_process_input(dt, s)
+    spaceship.ship_process_input_movement(dt, s)
+    spaceship.ship_process_input_warp(dt, s)
+    spaceship.ship_process_input_weapon(dt, s)
 end
 
-function ship.limit_vector_distance(dx, dy, limit)
+function spaceship.limit_vector_distance(dx, dy, limit)
     if aly.dist(0, 0, dx, dy) > limit then
         dx, dy = aly.move(0, 0, aly.angle(0, 0, dx, dy), limit)
     end
     return dx, dy
 end
 
-function ship.ship_physics(dt, s)
+function spaceship.ship_physics(dt, s)
     if s.warp.charge == 1.0 then
         s.warp.speed = aly.step(
             s.warp.speed,
@@ -142,7 +142,7 @@ function ship.ship_physics(dt, s)
         end
         s.physics.dx = s.physics.dx - (s.physics.dx * DRAG * dt)
         s.physics.dy = s.physics.dy - (s.physics.dy * DRAG * dt)
-        s.physics.dx, s.physics.dy = ship.limit_vector_distance(s.physics.dx, s.physics.dy, MAX_SPEED)
+        s.physics.dx, s.physics.dy = spaceship.limit_vector_distance(s.physics.dx, s.physics.dy, MAX_SPEED)
     end
     s.weapon.energy = aly.step(s.weapon.energy, 1.0, 1/15*dt)
 
@@ -152,10 +152,10 @@ function ship.ship_physics(dt, s)
     s.physics.collision.solid = s.warp.charge
 end
 
-function ship.update_ship(s, dt)
+function spaceship.update_ship(s, dt)
     s.input = s:behavior()
-    ship.ship_process_input(dt, s)
-    ship.ship_physics(dt, s)
+    spaceship.ship_process_input(dt, s)
+    spaceship.ship_physics(dt, s)
 end
 
 function update_bullet(bullet, dt)
@@ -169,7 +169,7 @@ function update_bullet(bullet, dt)
 end
 
 
-function ship.draw_spinny(s)
+function spaceship.draw_spinny(s)
     local t = turtle.new(s.physics.x, s.physics.y, s.physics.angle)
     t.pen_color(aly.colors.antiquewhite)
     t.pen_width(3)
@@ -184,7 +184,7 @@ function ship.draw_spinny(s)
     end
 end
 
-function ship.draw_enterprise(s, color, head_radius, body_length, engine_length, engine_dist, body_thickness)
+function spaceship.draw_enterprise(s, color, head_radius, body_length, engine_length, engine_dist, body_thickness)
     local t = turtle.new(s.physics.x, s.physics.y, s.physics.angle)
     t.pen_color(color)
     t.pen_width(body_thickness)
@@ -208,14 +208,14 @@ function ship.draw_enterprise(s, color, head_radius, body_length, engine_length,
     t.right(math.pi / 2)
 end
 
-function ship.normal_enterprise(s)
+function spaceship.normal_enterprise(s)
     local color = aly.colors.lightslategray
     local head_radius = 14
     local body_length = 25
     local engine_length = 16
     local engine_dist = 26
     local body_thickness = 6
-    ship.draw_enterprise(
+    spaceship.draw_enterprise(
         s,
         color,
         head_radius,
@@ -225,7 +225,7 @@ function ship.normal_enterprise(s)
         body_thickness
     )
 end
-function ship.gen_draw_random_enterprise()
+function spaceship.gen_draw_random_enterprise()
     local color = aly.copy(aly.colors.lightslategray)
     color[1] = misc.clamp_color(color[1] + math.random(-50, 50))
     color[2] = misc.clamp_color(color[2] + math.random(-50, 50))
@@ -236,7 +236,7 @@ function ship.gen_draw_random_enterprise()
     local engine_dist = 26 + math.random(-5, 5)
     local body_thickness = 6 + math.random(-4, 4)
     return function(s)
-        ship.draw_enterprise(
+        spaceship.draw_enterprise(
             s,
             color,
             head_radius,
@@ -248,7 +248,7 @@ function ship.gen_draw_random_enterprise()
     end
 end
 
-function ship.draw_fancy(s)
+function spaceship.draw_fancy(s)
     local t = turtle.new(s.physics.x, s.physics.y, s.physics.angle)
     t.pen_color(aly.colors.green)
     t.pen_width(3)
@@ -270,7 +270,7 @@ function ship.draw_fancy(s)
     t.pop()
 end
 
-function ship.draw_triangle(s)
+function spaceship.draw_triangle(s)
     local t = turtle.new(s.physics.x, s.physics.y, s.physics.angle)
     t.pen_color(aly.colors.red)
     t.pen_width(3)
@@ -297,7 +297,7 @@ function ship.draw_triangle(s)
     t.forward(20)
 end
 
-function ship.draw_test_ship(s)
+function spaceship.draw_test_ship(s)
     local t = turtle.new(s.physics.x, s.physics.y, s.physics.angle)
     t.pen_color(aly.colors.lightslategray)
     t.pen_width(3)
@@ -311,7 +311,7 @@ function ship.draw_test_ship(s)
     end
 end
 
-function ship.draw_warp_meter1(s)
+function spaceship.draw_warp_meter1(s)
     if s.warp.charge > 0 then
         love.graphics.setColor(palette.warp)
         love.graphics.setLineWidth(2 + 2 * s.warp.charge)
@@ -334,7 +334,7 @@ function ship.draw_warp_meter1(s)
     end
 end
 
-function ship.draw_warp_meter2(s)
+function spaceship.draw_warp_meter2(s)
     if s.warp.charge > 0 and s.warp.charge < 1.0 then
         love.graphics.setColor(palette.warp)
         love.graphics.setLineWidth(10)
@@ -349,4 +349,4 @@ function ship.draw_warp_meter2(s)
     end
 end
 
-return ship
+return spaceship

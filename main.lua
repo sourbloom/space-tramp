@@ -9,7 +9,7 @@ timer = require('libraries.hump.timer')
 
 -- game code
 local controls = require('controls')
-local ship = require('ship')
+local spaceship = require('spaceship')
 local ai = require('ai')
 local collision = require('collision')
 require('graphics')
@@ -33,21 +33,19 @@ function love.load()
 
     objects = {}
 
-    player = ship.new(
+    player = spaceship.new(
         0, 0,
         controls.player_input,
-        ship.update_ship,
-        ship.gen_draw_random_enterprise()
+        spaceship.gen_draw_random_enterprise()
     )
     table.insert(objects, player)
 
     for i = 1, 5 do
-        table.insert(objects, ship.new(
+        table.insert(objects, spaceship.new(
             math.random(-1000, 1000),
             math.random(-1000, 1000),
             ai.gen_follow_behavior(player),
-            ship.update_ship,
-            ship.gen_draw_random_enterprise()
+            spaceship.gen_draw_random_enterprise()
         ))
     end
 
