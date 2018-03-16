@@ -9,7 +9,7 @@ timer = require('libraries.hump.timer')
 
 -- game code
 local controls = require('controls')
-require('ship')
+local ship = require('ship')
 local ai = require('ai')
 local collision = require('collision')
 require('graphics')
@@ -33,15 +33,20 @@ function love.load()
 
     objects = {}
 
-    player = new_ship(0, 0, controls.player_input, update_ship, draw_fancy)
+    player = ship.new(
+        0, 0,
+        controls.player_input,
+        ship.update_ship,
+        draw_fancy
+    )
     table.insert(objects, player)
 
     for i = 1, 5 do
-        table.insert(objects, new_ship(
+        table.insert(objects, ship.new(
             math.random(-1000, 1000),
             math.random(-1000, 1000),
             ai.gen_follow_behavior(player),
-            update_ship,
+            ship.update_ship,
             gen_draw_random_enterprise()
         ))
     end
@@ -77,6 +82,10 @@ function love.keypressed(key)
     elseif key == 'f11' then
         love.window.setFullscreen(not love.window.getFullscreen(), 'desktop')
     end
+end
+
+local function not_dead(t)
+    return not t.dead
 end
 
 function love.update(dt)
