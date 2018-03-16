@@ -22,7 +22,7 @@ end
 
 function object_matches_tags(object, tags)
     for _, tag in ipairs(tags) do
-        if not aly.contains_value(object.physics.collision, tag) then
+        if not object.physics.collision[tag] then
             return false
         end
     end

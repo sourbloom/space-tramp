@@ -15,7 +15,8 @@ function spaceship.new(x, y, behavior, draw)
             dy = math.random(-3, 3),
             size = 26,
             collision = {
-                'ship'
+                ship = true,
+                solid = true
             }
         },
         warp = {
@@ -89,7 +90,9 @@ function spaceship.process_input_weapon(dt, ship)
                     x = ship.physics.x,
                     y = ship.physics.y,
                     size = 5,
-                    collision = {'bullet'}
+                    collision = {
+                        bullet = true
+                    }
                 },
                 owner = ship,
                 life = 1,
@@ -152,7 +155,7 @@ function spaceship.physics(dt, ship)
     ship.physics.x = ship.physics.x + ship.physics.dx
     ship.physics.y = ship.physics.y + ship.physics.dy
 
-    ship.physics.collision.solid = ship.warp.charge
+    ship.physics.collision.solid = ship.warp.charge ~= 1.0
 end
 
 function spaceship.update_ship(ship, dt)
