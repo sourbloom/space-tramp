@@ -40,51 +40,51 @@ function spaceship.new(x, y, behavior, draw)
 end
 
 function spaceship.gen_ship_draw(draw_func)
-    return function(s)
-        draw_func(s)
-        spaceship.draw_warp_meter1(s)
+    return function(ship)
+        draw_func(ship)
+        spaceship.draw_warp_meter2(ship)
     end
 end
 
-function spaceship.ship_process_input_movement(dt, s)
-    if s.warp.charge == 1.0 then
-        if s.input.left then
-            s.physics.angle = s.physics.angle - (WARP_ROTATION * dt)
-        elseif s.input.right then
-            s.physics.angle = s.physics.angle + (WARP_ROTATION * dt)
+function spaceship.ship_process_input_movement(dt, ship)
+    if ship.warp.charge == 1.0 then
+        if ship.input.left then
+            ship.physics.angle = ship.physics.angle - (WARP_ROTATION * dt)
+        elseif ship.input.right then
+            ship.physics.angle = ship.physics.angle + (WARP_ROTATION * dt)
         end
-    elseif s.warp.charge == 0 then
-        if s.input.left then
-            s.physics.angle = s.physics.angle - (ROTATION * dt)
-        elseif s.input.right then
-            s.physics.angle = s.physics.angle + (ROTATION * dt)
+    elseif ship.warp.charge == 0 then
+        if ship.input.left then
+            ship.physics.angle = ship.physics.angle - (ROTATION * dt)
+        elseif ship.input.right then
+            ship.physics.angle = ship.physics.angle + (ROTATION * dt)
         end
     end
 
-    if s.warp.charge == 0 then
-        if s.input.forward then
-            local dx, dy = aly.move(0, 0, s.physics.angle, ACCEL)
-            s.physics.dx = s.physics.dx + dx * dt
-            s.physics.dy = s.physics.dy + dy * dt
-        elseif s.input.reverse then
-            local dx, dy = aly.move(0, 0, s.physics.angle + math.pi, ACCEL)
-            s.physics.dx = s.physics.dx + dx * dt
-            s.physics.dy = s.physics.dy + dy * dt
+    if ship.warp.charge == 0 then
+        if ship.input.forward then
+            local dx, dy = aly.move(0, 0, ship.physics.angle, ACCEL)
+            ship.physics.dx = ship.physics.dx + dx * dt
+            ship.physics.dy = ship.physics.dy + dy * dt
+        elseif ship.input.reverse then
+            local dx, dy = aly.move(0, 0, ship.physics.angle + math.pi, ACCEL)
+            ship.physics.dx = ship.physics.dx + dx * dt
+            ship.physics.dy = ship.physics.dy + dy * dt
         end
     end
 end
 
-function spaceship.ship_process_input_weapon(dt, s)
-    if s.weapon.delay > 0 then
-        s.weapon.delay = s.weapon.delay - 1 * dt
+function spaceship.ship_process_input_weapon(dt, ship)
+    if ship.weapon.delay > 0 then
+        ship.weapon.delay = ship.weapon.delay - 1 * dt
     else
-        if s.weapon.energy > 0.15 and s.warp.charge == 0.0 and s.input.fire then
-            s.weapon.energy = s.weapon.energy - 0.15
-            s.weapon.delay = 0.5
+        if ship.weapon.energy > 0.15 and ship.warp.charge == 0.0 and ship.input.fire then
+            ship.weapon.energy = ship.weapon.energy - 0.15
+            ship.weapon.delay = 0.5
             local bullet = {
                 physics = {
-                    x = s.physics.x,
-                    y = s.physics.y,
+                    x = ship.physics.x,
+                    y = ship.physics.y,
                     size = 5,
                     collision = {'bullet'}
                 },
@@ -95,9 +95,9 @@ function spaceship.ship_process_input_weapon(dt, s)
                 draw = draw_bullet
             }
             bullet.physics.dx, bullet.physics.dy = aly.move(
-                s.physics.dx,
-                s.physics.dy,
-                s.physics.angle,
+                ship.physics.dx,
+                ship.physics.dy,
+                ship.physics.angle,
                 15
             )
             table.insert(objects, bullet)
@@ -105,18 +105,18 @@ function spaceship.ship_process_input_weapon(dt, s)
     end
 end
 
-function spaceship.ship_process_input_warp(dt, s)
-    if s.input.warp and s.warp.fuel > 0.0 then
-        s.warp.charge = aly.step(s.warp.charge, 1.0, (1/2 * dt))
+function spaceship.ship_process_input_warp(dt, ship)
+    if ship.input.warp and ship.warp.fuel > 0.0 then
+        ship.warp.charge = aly.step(ship.warp.charge, 1.0, (1/2 * dt))
     else
-        s.warp.charge = aly.step(s.warp.charge, 0, (3 * dt))
+        ship.warp.charge = aly.step(ship.warp.charge, 0, (3 * dt))
     end
 end
 
-function spaceship.ship_process_input(dt, s)
-    spaceship.ship_process_input_movement(dt, s)
-    spaceship.ship_process_input_warp(dt, s)
-    spaceship.ship_process_input_weapon(dt, s)
+function spaceship.ship_process_input(dt, ship)
+    spaceship.ship_process_input_movement(dt, ship)
+    spaceship.ship_process_input_warp(dt, ship)
+    spaceship.ship_process_input_weapon(dt, ship)
 end
 
 function spaceship.limit_vector_distance(dx, dy, limit)
@@ -126,36 +126,36 @@ function spaceship.limit_vector_distance(dx, dy, limit)
     return dx, dy
 end
 
-function spaceship.ship_physics(dt, s)
-    if s.warp.charge == 1.0 then
-        s.warp.speed = aly.step(
-            s.warp.speed,
+function spaceship.ship_physics(dt, ship)
+    if ship.warp.charge == 1.0 then
+        ship.warp.speed = aly.step(
+            ship.warp.speed,
             WARP_SPEED,
             WARP_SPEED * 2 * dt
         )
-        -- s.warp.fuel = aly.step(s.warp.fuel, 0.0, 1/50*dt)
-        s.physics.dx, s.physics.dy = aly.move(0, 0, s.physics.angle, s.warp.speed * dt)
+        -- ship.warp.fuel = aly.step(ship.warp.fuel, 0.0, 1/50*dt)
+        ship.physics.dx, ship.physics.dy = aly.move(0, 0, ship.physics.angle, ship.warp.speed * dt)
     else
-        if s.warp.speed > 0.1 then
-            s.physics.dx, s.physics.dy = aly.move(0, 0, s.physics.angle, 100 * dt)
-            s.warp.speed = aly.step(s.warp.speed, 0, WARP_SPEED * 6 * dt)
+        if ship.warp.speed > 0.1 then
+            ship.physics.dx, ship.physics.dy = aly.move(0, 0, ship.physics.angle, 100 * dt)
+            ship.warp.speed = aly.step(ship.warp.speed, 0, WARP_SPEED * 6 * dt)
         end
-        s.physics.dx = s.physics.dx - (s.physics.dx * DRAG * dt)
-        s.physics.dy = s.physics.dy - (s.physics.dy * DRAG * dt)
-        s.physics.dx, s.physics.dy = spaceship.limit_vector_distance(s.physics.dx, s.physics.dy, MAX_SPEED)
+        ship.physics.dx = ship.physics.dx - (ship.physics.dx * DRAG * dt)
+        ship.physics.dy = ship.physics.dy - (ship.physics.dy * DRAG * dt)
+        ship.physics.dx, ship.physics.dy = spaceship.limit_vector_distance(ship.physics.dx, ship.physics.dy, MAX_SPEED)
     end
-    s.weapon.energy = aly.step(s.weapon.energy, 1.0, 1/15*dt)
+    ship.weapon.energy = aly.step(ship.weapon.energy, 1.0, 1/15*dt)
 
-    s.physics.x = s.physics.x + s.physics.dx
-    s.physics.y = s.physics.y + s.physics.dy
+    ship.physics.x = ship.physics.x + ship.physics.dx
+    ship.physics.y = ship.physics.y + ship.physics.dy
 
-    s.physics.collision.solid = s.warp.charge
+    ship.physics.collision.solid = ship.warp.charge
 end
 
-function spaceship.update_ship(s, dt)
-    s.input = s:behavior()
-    spaceship.ship_process_input(dt, s)
-    spaceship.ship_physics(dt, s)
+function spaceship.update_ship(ship, dt)
+    ship.input = ship:behavior()
+    spaceship.ship_process_input(dt, ship)
+    spaceship.ship_physics(dt, ship)
 end
 
 function update_bullet(bullet, dt)
@@ -169,8 +169,8 @@ function update_bullet(bullet, dt)
 end
 
 
-function spaceship.draw_spinny(s)
-    local t = turtle.new(s.physics.x, s.physics.y, s.physics.angle)
+function spaceship.draw_spinny(ship)
+    local t = turtle.new(ship.physics.x, ship.physics.y, ship.physics.angle)
     t.pen_color(aly.colors.antiquewhite)
     t.pen_width(3)
 
@@ -184,8 +184,8 @@ function spaceship.draw_spinny(s)
     end
 end
 
-function spaceship.draw_enterprise(s, color, head_radius, body_length, engine_length, engine_dist, body_thickness)
-    local t = turtle.new(s.physics.x, s.physics.y, s.physics.angle)
+function spaceship.draw_enterprise(ship, color, head_radius, body_length, engine_length, engine_dist, body_thickness)
+    local t = turtle.new(ship.physics.x, ship.physics.y, ship.physics.angle)
     t.pen_color(color)
     t.pen_width(body_thickness)
 
@@ -208,7 +208,7 @@ function spaceship.draw_enterprise(s, color, head_radius, body_length, engine_le
     t.right(math.pi / 2)
 end
 
-function spaceship.normal_enterprise(s)
+function spaceship.normal_enterprise(ship)
     local color = aly.colors.lightslategray
     local head_radius = 14
     local body_length = 25
@@ -216,7 +216,7 @@ function spaceship.normal_enterprise(s)
     local engine_dist = 26
     local body_thickness = 6
     spaceship.draw_enterprise(
-        s,
+        ship,
         color,
         head_radius,
         body_length,
@@ -235,9 +235,9 @@ function spaceship.gen_draw_random_enterprise()
     local engine_length = 16 + math.random(-5, 5)
     local engine_dist = 26 + math.random(-5, 5)
     local body_thickness = 6 + math.random(-4, 4)
-    return function(s)
+    return function(ship)
         spaceship.draw_enterprise(
-            s,
+            ship,
             color,
             head_radius,
             body_length,
@@ -248,8 +248,8 @@ function spaceship.gen_draw_random_enterprise()
     end
 end
 
-function spaceship.draw_fancy(s)
-    local t = turtle.new(s.physics.x, s.physics.y, s.physics.angle)
+function spaceship.draw_fancy(ship)
+    local t = turtle.new(ship.physics.x, ship.physics.y, ship.physics.angle)
     t.pen_color(aly.colors.green)
     t.pen_width(3)
 
@@ -270,8 +270,8 @@ function spaceship.draw_fancy(s)
     t.pop()
 end
 
-function spaceship.draw_triangle(s)
-    local t = turtle.new(s.physics.x, s.physics.y, s.physics.angle)
+function spaceship.draw_triangle(ship)
+    local t = turtle.new(ship.physics.x, ship.physics.y, ship.physics.angle)
     t.pen_color(aly.colors.red)
     t.pen_width(3)
 
@@ -297,8 +297,8 @@ function spaceship.draw_triangle(s)
     t.forward(20)
 end
 
-function spaceship.draw_test_ship(s)
-    local t = turtle.new(s.physics.x, s.physics.y, s.physics.angle)
+function spaceship.draw_test_ship(ship)
+    local t = turtle.new(ship.physics.x, ship.physics.y, ship.physics.angle)
     t.pen_color(aly.colors.lightslategray)
     t.pen_width(3)
 
@@ -311,40 +311,40 @@ function spaceship.draw_test_ship(s)
     end
 end
 
-function spaceship.draw_warp_meter1(s)
-    if s.warp.charge > 0 then
+function spaceship.draw_warp_meter1(ship)
+    if ship.warp.charge > 0 then
         love.graphics.setColor(palette.warp)
-        love.graphics.setLineWidth(2 + 2 * s.warp.charge)
+        love.graphics.setLineWidth(2 + 2 * ship.warp.charge)
         love.graphics.arc(
             'line',
             'open',
-            math.floor(s.physics.x), math.floor(s.physics.y),
+            math.floor(ship.physics.x), math.floor(ship.physics.y),
             60,
-            s.physics.angle + math.pi,
-            s.physics.angle + math.pi + math.pi * s.warp.charge
+            ship.physics.angle + math.pi,
+            ship.physics.angle + math.pi + math.pi * ship.warp.charge
         )
         love.graphics.arc(
             'line',
             'open',
-            math.floor(s.physics.x), math.floor(s.physics.y),
+            math.floor(ship.physics.x), math.floor(ship.physics.y),
             60,
-            s.physics.angle + math.pi,
-            s.physics.angle + math.pi - math.pi * s.warp.charge
+            ship.physics.angle + math.pi,
+            ship.physics.angle + math.pi - math.pi * ship.warp.charge
         )
     end
 end
 
-function spaceship.draw_warp_meter2(s)
-    if s.warp.charge > 0 and s.warp.charge < 1.0 then
+function spaceship.draw_warp_meter2(ship)
+    if ship.warp.charge > 0 and ship.warp.charge < 1.0 then
         love.graphics.setColor(palette.warp)
         love.graphics.setLineWidth(10)
         love.graphics.arc(
             'line',
             'open',
-            math.floor(s.physics.x), math.floor(s.physics.y),
+            math.floor(ship.physics.x), math.floor(ship.physics.y),
             60,
-            s.physics.angle,
-            s.physics.angle + math.pi * 2 * s.warp.charge
+            ship.physics.angle,
+            ship.physics.angle + math.pi * 2 * ship.warp.charge
         )
     end
 end

@@ -1,13 +1,12 @@
 -- space tramp!
 
--- util
-local aly = require('util.aly')
-local misc = require('util.misc')
+local lurker = require("libraries.lurker.lurker")
+local timer = require('libraries.hump.timer')
 require('libraries.functional')
 
-timer = require('libraries.hump.timer')
+local aly = require('util.aly')
+local misc = require('util.misc')
 
--- game code
 local controls = require('controls')
 local spaceship = require('spaceship')
 local ai = require('ai')
@@ -83,7 +82,7 @@ function love.keypressed(key)
 end
 
 function love.update(dt)
-    require("libraries.lurker.lurker").update()
+    lurker.update()
 
     for _, object in ipairs(objects) do
         object:update(dt)
