@@ -2,11 +2,11 @@ local aly = require('util.aly')
 
 local network_node = {}
 
-function network_node.new(x, y)
+function network_node.new(options)
     return {
         physics = {
-            x = x,
-            y = y,
+            x = options.x or math.random(-1000, 1000),
+            y = options.y or math.random(-1000, 1000),
             collision = {
                 'network'
             }

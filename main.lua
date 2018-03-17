@@ -32,28 +32,26 @@ function love.load()
 
     objects = {}
 
-    player = spaceship.new(
-        0, 0,
-        controls.player_input,
-        spaceship.gen_draw_random_enterprise()
-    )
+    player = spaceship.new({
+        x = 0,
+        y = 0,
+        behavior = controls.player_input,
+        draw = spaceship.gen_draw_random_enterprise()
+    })
     table.insert(objects, player)
 
     for i = 1, 5 do
-        table.insert(objects, spaceship.new(
-            math.random(-1000, 1000),
-            math.random(-1000, 1000),
-            ai.gen_follow_behavior(player),
-            spaceship.gen_draw_random_enterprise()
-        ))
+        table.insert(objects, spaceship.new({
+            -- behavior = ai.gen_follow_behavior(player)
+        }))
     end
 
     local network = {}
     for i = 1, 5 do
-        table.insert(network, network_node.new(
-            math.random(-200000, 200000),
-            math.random(-200000, 200000)
-        ))
+        table.insert(network, network_node.new({
+            x = math.random(-200000, 200000),
+            y = math.random(-200000, 200000)
+        }))
     end
 
     local i = 3

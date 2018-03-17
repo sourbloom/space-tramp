@@ -58,14 +58,14 @@ end
 
 function draw_nav(objects)
     local size = math.min(love.graphics.getWidth(), love.graphics.getHeight())
-    local cell_size = size / 24
+    local cell_size = size / 10
     love.graphics.setColor(aly.colors.darkseagreen)
     love.graphics.setLineWidth(1)
-    for x = 0, 23 do
-        for y = 0, 23 do
+    for x = 0, 9 do
+        for y = 0, 9 do
             love.graphics.line(x * cell_size, y * cell_size, (x + 1) * cell_size, y * cell_size)
             love.graphics.line(x * cell_size, y * cell_size, x * cell_size, (y + 1) * cell_size)
-            if x == 23 then
+            if x == 9 then
                 love.graphics.print(greek[y+1], size + 10, 5 + y * cell_size)
             end
         end

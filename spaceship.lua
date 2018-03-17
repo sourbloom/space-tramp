@@ -5,37 +5,46 @@ local misc = require('util.misc')
 
 local spaceship = {}
 
-function spaceship.new(x, y, behavior, draw)
+function spaceship.new(options)
     return {
         physics = {
-            x = x,
-            y = y,
-            angle = math.random() * math.pi * 2,
-            dx = math.random(-3, 3),
-            dy = math.random(-3, 3),
-            size = 26,
-            collision = {
+            x = options.x or math.random(-1000, 1000),
+            y = options.y or math.random(-1000, 1000),
+            angle = options.angle or math.random() * math.pi * 2,
+            dx = options.dx or math.random(-3, 3),
+            dy = options.dy or math.random(-3, 3),
+            size = options.size or 26,
+            collision = aly.merge({
                 ship = true,
                 solid = true
-            }
+            }, options.collision or {})
         },
+
         warp = {
             charge = 0,
             speed = 0,
-            fuel = 0.91,
+            fuel = options.warp_fuel or 0.91
         },
+
         weapon = {
             delay = 0.0,
             energy = 1.0
         },
+
         shields = {
-            charge = 1.0
+            charge = options.shields or 1.0
         },
 
-        behavior = behavior,
-        update = spaceship.update_ship,
+        communication = {
+            on_message = function(ship, message) end
+        },
+
+        behavior = options.behavior or function() return {} end,
+
+        update = options.update or spaceship.update_ship,
+
         draw = misc.chain_funcs(
-            draw,
+            options.draw or spaceship.gen_draw_random_enterprise(),
             spaceship.draw_warp_meter2
         ),
 
@@ -43,10 +52,21 @@ function spaceship.new(x, y, behavior, draw)
     }
 end
 
+function spaceship.send_message(message)
+end
+
 function spaceship.gen_draw(draw_func)
     return function(ship)
         draw_func(ship)
         spaceship.draw_warp_meter2(ship)
+    end
+end
+
+
+
+function spaceship.process_input_communication(dt, ship)
+    if ship.input.hail then
+
     end
 end
 
