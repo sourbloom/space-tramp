@@ -11,13 +11,11 @@ local controls = require('controls')
 local spaceship = require('spaceship')
 local ai = require('ai')
 local collision = require('collision')
-require('graphics')
+local graphics = require('graphics')
 local hud = require('hud')
 local network_node = require('network_node')
 
 function love.load()
-    -- love.window.setMode(500, 500, {resizable = true})
-
     math.randomseed(os.time())
 
     MAX_SPEED = 10
@@ -42,7 +40,7 @@ function love.load()
 
     for i = 1, 5 do
         table.insert(objects, spaceship.new({
-            -- behavior = ai.gen_follow_behavior(player)
+            behavior = ai.gen_follow_behavior(player)
         }))
     end
 
@@ -68,7 +66,7 @@ function love.load()
         table.insert(objects, node)
     end
 
-    stars = make_stars()
+    stars = graphics.make_stars()
 end
 
 function love.keypressed(key)
@@ -91,12 +89,14 @@ function love.update(dt)
     collision.check(objects)
 end
 
+-- res = 16/9
+
 function love.draw()
-    draw_stars(stars, camera)
+    graphics.draw_stars(stars, camera)
 
     camera.x = player.physics.x
     camera.y = player.physics.y
-    camera.zoom = 0.5 * get_window_size() / 1000
+    camera.zoom = 0.5 * graphics.get_cam_zoom()
     camera:push()
 
     for _, object in ipairs(objects) do
@@ -106,7 +106,7 @@ function love.draw()
     camera:pop()
 
     if player.input.nav then
-        draw_nav(objects)
+        graphics.draw_nav(objects)
     end
 
     hud.draw_meter(

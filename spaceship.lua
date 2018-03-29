@@ -1,5 +1,6 @@
 local aly = require('util.aly')
 local turtle = require('util.turtle')
+local graphics = require('graphics')
 local palette = require('palette')
 local misc = require('util.misc')
 
@@ -118,7 +119,7 @@ function spaceship.process_input_weapon(dt, ship)
                 life = 1,
                 dead = false,
                 update = update_bullet,
-                draw = draw_bullet
+                draw = graphics.draw_bullet
             }
             bullet.physics.dx, bullet.physics.dy = aly.move(
                 ship.physics.dx,

@@ -1,4 +1,5 @@
 local aly = require('util.aly')
+local graphics = require('graphics')
 local palette = require('palette')
 
 local hud = {}
@@ -31,12 +32,12 @@ function hud.draw_guage_with_background(x, y, radius, width, color, val, label)
 end
 
 function hud.draw_meter(warp, weapons, shields)
-    local size = get_window_size()
+    local size = graphics.get_window_size()
     hud.draw_guage_with_background(
         0,
         love.graphics.getHeight(),
-        get_window_size()/8,
-        get_window_size()/18,
+        graphics.get_window_size()/8,
+        graphics.get_window_size()/18,
         palette.warp,
         warp,
         'WARP'
@@ -44,8 +45,8 @@ function hud.draw_meter(warp, weapons, shields)
     hud.draw_guage_with_background(
         0,
         love.graphics.getHeight(),
-        get_window_size()/8 + get_window_size()/18,
-        get_window_size()/18,
+        graphics.get_window_size()/8 + graphics.get_window_size()/18,
+        graphics.get_window_size()/18,
         palette.weapon,
         weapons,
         'WEAPON'
@@ -53,8 +54,8 @@ function hud.draw_meter(warp, weapons, shields)
     hud.draw_guage_with_background(
         0,
         love.graphics.getHeight(),
-        get_window_size()/8 + get_window_size()/18*2,
-        get_window_size()/18,
+        graphics.get_window_size()/8 + graphics.get_window_size()/18*2,
+        graphics.get_window_size()/18,
         palette.shield,
         shields,
         'SHIELD'

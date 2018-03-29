@@ -20,8 +20,12 @@ function network_node.new(options)
 end
 
 function network_node.attach(node, target)
-    table.insert(node.neighbors, target)
-    table.insert(target.neighbors, node)
+    if not aly.contains_value(node.neighbors, target) then
+        table.insert(node.neighbors, target)
+    end
+    if not aly.contains_value(target.neighbors, node) then
+        table.insert(target.neighbors, node)
+    end
 end
 
 function network_node.draw(node)

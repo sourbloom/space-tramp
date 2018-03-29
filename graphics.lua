@@ -3,11 +3,31 @@ local turtle = require('util.turtle')
 local palette = require('palette')
 local misc = require('util.misc')
 
-function get_window_size()
+local graphics = {}
+
+function graphics.get_window_size()
     return math.min(love.graphics.getWidth(), love.graphics.getHeight())
 end
 
-function make_stars()
+function graphics.get_cam_zoom()
+    local w = love.graphics.getWidth()
+    local h = love.graphics.getHeight()
+    local z
+
+    if w > h then
+        z = w / h
+    elseif w < h then
+        z = h / w
+    else
+        z = 1
+    end
+
+    z = math.max(z, 0.5)
+
+    return z
+end
+
+function graphics.make_stars()
     local stars = {}
     for i = 1, 100 do
         local hue = math.random(40, 220)
@@ -21,7 +41,7 @@ function make_stars()
     return stars
 end
 
-function draw_stars(stars, camera)
+function graphics.draw_stars(stars, camera)
     for i, star in ipairs(stars) do
         love.graphics.setColor(star.color)
         local x = ((star.x - (camera.x * camera.zoom / (-star.r + 5))) % (love.graphics.getWidth() + STAR_WARP_LINE_LENGTH * 2)) - STAR_WARP_LINE_LENGTH
@@ -41,7 +61,7 @@ function draw_stars(stars, camera)
     end
 end
 
-function draw_bullet(bullet)
+function graphics.draw_bullet(bullet)
     if not bullet.dead then
         love.graphics.setColor(aly.colors.red)
         love.graphics.circle('fill', bullet.physics.x, bullet.physics.y, 10)
@@ -50,13 +70,13 @@ end
 
 greek = {'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'zeta', 'eta', 'theta', 'iota', 'kappa', 'lambda', 'mu', 'nu', 'xi', 'omicron', 'pi', 'rho', 'sigma', 'tau', 'upsilon', 'phi', 'chi', 'psi', 'omega'}
 
-function nav_draw_dot(x, y, color, radius)
+function graphics.nav_draw_dot(x, y, color, radius)
     love.graphics.setLineWidth(2)
     love.graphics.setColor(color or aly.colors.blue)
     love.graphics.circle((radius or 3) < 4 and 'fill' or 'line', x, y, radius or 3)
 end
 
-function draw_nav(objects)
+function graphics.draw_nav(objects)
     local size = math.min(love.graphics.getWidth(), love.graphics.getHeight())
     local cell_size = size / 10
     love.graphics.setColor(aly.colors.darkseagreen)
@@ -85,12 +105,12 @@ function draw_nav(objects)
                 player.physics.angle,
                 20 + player.warp.charge * 3000
             )
-            nav_draw_dot(x, y)
+            graphics.nav_draw_dot(x, y)
             love.graphics.setColor(aly.colors.white)
             love.graphics.setLineWidth(1)
             love.graphics.line(x, y, x2, y2)
         elseif aly.contains_value(object.physics.collision, 'network') then
-            nav_draw_dot(x, y, palette.warp, 15)
+            graphics.nav_draw_dot(x, y, palette.warp, 15)
             for _, node in ipairs(object.neighbors) do
                 local x2 = size / 2 + node.physics.x / 500
                 local y2 = size / 2 + node.physics.y / 500
@@ -99,7 +119,9 @@ function draw_nav(objects)
                 love.graphics.line(x, y, x2, y2)
             end
         else
-            nav_draw_dot(x, y)
+            graphics.nav_draw_dot(x, y)
         end
     end
 end
+
+return graphics
